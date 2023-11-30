@@ -84,15 +84,6 @@ input::-webkit-inner-spin-button {
     background: var(--secondary-semi-transparent-color);
 }
 
-/*.button-block {*/
-/*    gap: .75em;*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    align-items: center;*/
-/*}*/
-/*.button-block input + input {*/
-/*    margin-left: .75em;*/
-/*}*/
 
 .primary-button {
     padding: .5em 1em;
@@ -221,13 +212,15 @@ nav .vertical-divider {
 }
 
 .top-bar-window {
+    max-height: 92vh;
     padding-top: 1em;
     padding-bottom: 1em;
     padding-inline: 2em;
     gap: 24px;
     font-size: 1em;
+    box-sizing: border-box;
 
-    overflow-y: hidden;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -239,24 +232,26 @@ nav .vertical-divider {
 }
 
 .log-in-window {
-    height: 16.18em;
+    height: 18.18em;
 }
 :is(.top-bar.navigation, .top-bar.making-record, .top-bar.signing-up) .log-in-window {
     height: 0;
     padding-top: 0;
     padding-bottom: 0;
+    overflow-y: hidden;
 }
 .sign-up-window {
-    height: 22.6em;
+    height: 27.28em;
 }
 :is(.top-bar.navigation, .top-bar.making-record, .top-bar.logging-in) .sign-up-window {
     height: 0;
     padding-top: 0;
     padding-bottom: 0;
+    overflow-y: hidden;
 }
 
 .make-record-window {
-    height: 20.58em;
+    height: 22.58em;
 }
 .make-record-window.new #make-record-remove-record {
     display: none;
@@ -265,6 +260,7 @@ nav .vertical-divider {
     height: 0;
     padding-top: 0;
     padding-bottom: 0;
+    overflow-y: hidden;
 }
 
 :is(.log-in-window, .sign-up-window, .make-record-window) .secondary-button {

@@ -35,9 +35,5 @@ $usersJsonDecodedData[] = new User(passedLogin, passedPassword);
 // write data with a new user to the JSON file
 file_put_contents("../data/users.json", json_encode($usersJsonDecodedData));
 
-//file_put_contents(
-//    "../data/users.json",
-//    json_encode(
-//        json_decode(file_get_contents("../data/users.json"))[] = new User($_POST["login"], $_POST["password"])
-//    )
-//);
+// redirect back to the main page
+header("Location: ../index.php");

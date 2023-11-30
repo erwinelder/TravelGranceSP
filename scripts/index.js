@@ -36,11 +36,11 @@ class SignUpForm {
 }
 
 
-/** After page was loaded, call function to operate with elements (set up clicks on buttons, etc.) */
+/** After page was loaded, call function to operate with elements (set up clicks on buttons, etc.). */
 window.addEventListener("load", setUpPageOnLoad);
 
 
-/** make different operations with elements after they were loaded on the page */
+/** make different operations with elements after they were loaded on the page. */
 function setUpPageOnLoad() {
     // top-bar elements
 
@@ -65,28 +65,28 @@ function setUpPageOnLoad() {
 }
 
 
-/** Set up click behaviour on the log-in button in the top-bar */
+/** Set up click behaviour on the log-in button in the top-bar. */
 function setUpLogInWindowButtonClickListener() {
     id("log-in-button").onclick = () => {
         // show log-in window in the top-bar rather than navigation buttons
         changeTopBarViewToAnother("logging-in");
     }
 }
-/** Set up click behaviour on the log-in button in the sign-in window */
+/** Set up click behaviour on the log-in button in the sign-in window. */
 function setUpChangeToLogInWindowButtonClickListener() {
     id("change-to-log-in-button").onclick = () => {
         // show log-in window in the top-bar rather than sign-up
         changeTopBarViewToAnother("logging-in");
     }
 }
-/** Set up click behaviour on the close button in the log-in window */
+/** Set up click behaviour on the close button in the log-in window. */
 function setUpCloseLogInWindowButtonClickListener() {
     id("log-in-window-close-button").onclick = () => {
         // show navigation buttons in the top-bar rather than log-in window
         changeTopBarViewToAnother("navigation");
     }
 }
-/** Reset data in inputs in the log-in window */
+/** Reset data in inputs in the log-in window. */
 function resetLogInWindowInputData() {
     // login
     id("log-in-login-input").value = null;
@@ -105,21 +105,21 @@ function setUpLogInSubmitButtonClickListener() {
 }
 
 
-/** Set up click behaviour on the sign-in button in the log-in window */
+/** Set up click behaviour on the sign-in button in the log-in window. */
 function setUpChangeToSignUpWindowButtonClickListener() {
     id("change-to-sign-up-button").onclick = () => {
         // show sign-up window in the top-bar rather than log-in window
         changeTopBarViewToAnother("signing-up");
     }
 }
-/** Set up click behaviour on close button in the sign-up window */
+/** Set up click behaviour on close button in the sign-up window. */
 function setUpCloseSignUpWindowButtonClickListener() {
     id("sign-up-window-close-button").onclick = () => {
         // show navigation buttons in the top-bar rather than sign-up window
         changeTopBarViewToAnother("navigation");
     }
 }
-/** Reset data in inputs in the sign-up window */
+/** Reset data in inputs in the sign-up window. */
 function resetSignUpWindowInputData() {
     // reset login
     id("sign-up-login-input").value = null;
@@ -130,115 +130,119 @@ function resetSignUpWindowInputData() {
     if (id("sign-up-password-input").classList.contains("validation-checking"))
         id("sign-up-password-input").classList.remove("validation-checking");
     // reset repeat password
-    id("sign-up-repeat-password-input").value = null;
-    if (id("sign-up-repeat-password-input").classList.contains("validation-checking"))
-        id("sign-up-repeat-password-input").classList.remove("validation-checking");
+    id("sign-up-password-confirmation-input").value = null;
+    if (id("sign-up-password-confirmation-input").classList.contains("validation-checking"))
+        id("sign-up-password-confirmation-input").classList.remove("validation-checking");
     // hide "passwords do not match" error massage
     if (id("sign-up-password-err-msg").classList.contains("visible"))
         id("sign-up-password-err-msg").classList.remove("visible");
 }
 
-/** Set up click behaviour on the submit button in the sign-up form */
+/** Set up click behaviour on the submit button in the sign-up form. */
 function setUpSignUpSubmitButtonClickListener() {
-    id("sign-up-submit-button").onclick = (submitEvent) => {
+    id("sign-up-submit-button").onclick = async (submitEvent) => {
+        // prevent the form to be sent so async/await validation can be checked properly
+        // and the form definitely will not be sent if validation is not passed
+        submitEvent.preventDefault();
 
-        // validate inputs in the sign-up window,
-        // check if the login already exists in the JSON file
-        if (!checkSignUpFormValidation(
+        // validate inputs data in the sign-up window
+        if (await checkSignUpFormValidation(
             id("sign-up-login-input").value,
             id("sign-up-password-input").value,
             id("sign-up-password-confirmation-input").value,
+            id("sign-up-login-input"),
             id("sign-up-login-err-msg"),
             id("sign-up-password-err-msg"),
             id("sign-up-password-confirmation-err-msg")
-        )) {
-            submitEvent.preventDefault();
-            return;
-        }
-
-        // show navigation buttons in the top-bar rather than sign-up window
-        changeTopBarViewToAnother("navigation");
+        ))
+            // if validation was passed, send form manually
+            submitEvent.target.form.submit();
     }
 }
 
-/** check data validation in inputs in the sign-up window
+/** Check data validation in the inputs in the sign-up window.
  * @param {string} login
  * @param {string} password
  * @param {string} passwordConfirmation
- * @param {HTMLElement} loginErrMsgField login input element
- * @param {HTMLElement} passwordErrMsgField password input element
- * @param {HTMLElement} passwordConfirmErrMsgField password confirmation input element */
-function checkSignUpFormValidation(
-    login, password, passwordConfirmation,
+ * @param {HTMLInputElement} loginField login input element
+ * @param {HTMLInputElement} loginErrMsgField login input element
+ * @param {HTMLInputElement} passwordErrMsgField password input element
+ * @param {HTMLInputElement} passwordConfirmErrMsgField password confirmation input element */
+async function checkSignUpFormValidation(
+    login, password, passwordConfirmation, loginField,
     loginErrMsgField, passwordErrMsgField, passwordConfirmErrMsgField
 ) {
 
-    if (!checkForSignUpLoginValidation(login, loginErrMsgField))
-        return false;
+    // validate login and save the result
+    let loginValidationResult =
+        await checkForSignUpLoginValidation(login, loginField, loginErrMsgField);
+    // validate password and save the result
+    let passwordValidationResult =
+        checkForSignUpPasswordValidation(password, passwordConfirmation, passwordErrMsgField, passwordConfirmErrMsgField);
 
-    if (!checkForSignUpPasswordValidation(password, passwordConfirmation, passwordErrMsgField, passwordConfirmErrMsgField))
-        return false;
-
-    // if all validation checking above were passed, return TRUE
-    return true;
+    // if a result of some validation was false, return FALSE
+    return (loginValidationResult && passwordValidationResult);
 }
 
-/** check login validation in inputs in the sign-up window
+/** Check login validation in inputs in the sign-up window.
+ * If any validation failed, it does not continue to the next validation and returns FALSE.
  * @param {string} login
- * @param {HTMLElement} loginErrMsgField login input element */
-function checkForSignUpLoginValidation(login, loginErrMsgField) {
+ @param {HTMLInputElement} loginField login input element
+ * @param {HTMLInputElement} loginErrMsgField login input DOM element */
+async function checkForSignUpLoginValidation(login, loginField, loginErrMsgField) {
+    let loginLengthErrMsg = "*At least 4 characters long";
+    let loginExistenceErrMsg = "*Login already exist";
 
-    // if login length is invalid, show corresponding message and return FALSE
+    // if login length is invalid, show the corresponding message and return FALSE
     if (login.length < 4) {
-        loginErrMsgField.innerText = "*At least 4 characters long";
+        loginErrMsgField.innerText = loginLengthErrMsg;
         loginErrMsgField.classList.add("visible");
         return false;
-        // if the opposite, hide this message
-    } else if (loginErrMsgField.classList.contains("visible")) {
+    // if the opposite, hide this message
+    } else if (loginErrMsgField.innerText === loginLengthErrMsg)
         loginErrMsgField.classList.remove("visible");
-    }
 
-    // if there is an account with this login, show corresponding message and return FALSE
-    checkIfLoginAlreadyExists(login)
-    if(checkIfLoginAlreadyExists(login)) {
-        loginErrMsgField.innerText = "*Login already exist";
+    // if there is an account with this login, show the corresponding message and return FALSE
+    let loginCheckingResult = await checkIfLoginAlreadyExists(login);
+    if(loginCheckingResult) {
+        loginErrMsgField.innerText = loginExistenceErrMsg;
         loginErrMsgField.classList.add("visible");
+        loginField.setCustomValidity("Login already exists");
         return false;
-        // if not, hide this message
-    } else if (loginErrMsgField.classList.contains("visible")) {
+    // if not, hide this message
+    } else if (loginErrMsgField.innerText === loginExistenceErrMsg) {
         loginErrMsgField.classList.remove("visible");
+        loginField.setCustomValidity("");
     }
 
     return true;
 }
 
-/** check if login already exists
- * @param {string} login
- * @return {boolean}
+/** Check if the login already exists.
+ * @param {string} searchedLogin
+ * @return {Promise<boolean>}
  */
-async function checkIfLoginAlreadyExists(login) {
-    try {
-        let response = await fetch("../data/users.json");
-
-        if (!response.ok) return false;
-
-        let data = await response.json();
-        return findLoginInData(login, data);
-
-    } catch (error) {
-        return false;
-    }
+async function checkIfLoginAlreadyExists(searchedLogin) {
+    return fetch("../php/login-checking.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(searchedLogin)
+    })
+        .then(response => {
+            if (!response.ok)
+                throw new Error("Login checking failed");
+            return response.json();
+        })
+        .catch(error => {
+            console.log(`Error during checking login: ${error}`);
+            return false;
+        });
 }
 
-/** check if passed data contains passed login
- * @param {string} login
- * @param {string} data
- * @return {boolean} */
-function findLoginInData(login, data) {
-    return false
-}
-
-/** check password validation in inputs in the sign-up window
+/** Check password validation in inputs in the sign-up window.
+ * If any validation failed, it does not continue to the next validation and returns FALSE.
  * @param {string} password
  * @param {string} passwordConfirmation
  * @param {HTMLElement} passwordErrMsgField password input element
@@ -252,30 +256,30 @@ function checkForSignUpPasswordValidation(
     if (password.length < 8) {
         passwordErrMsgField.innerText = "*At least 8 characters long";
         passwordErrMsgField.classList.add("visible");
-        return false
-        // if the opposite, hide this message
-    } else if (passwordErrMsgField.classList.contains("visible")) {
+        return false;
+    // if the opposite, hide this message
+    } else if (passwordErrMsgField.classList.contains("visible"))
         passwordErrMsgField.classList.remove("visible");
-    }
 
     // if password and confirmation password are different, show corresponding message and return FALSE
     if (password !== passwordConfirmation) {
         passwordConfirmErrMsgField.innerText = "*Passwords do not match";
         passwordConfirmErrMsgField.classList.add("visible");
-        return false
-        // if the opposite, hide this message
-    } else if (passwordConfirmErrMsgField.classList.contains("visible")) {
+        return false;
+    // if the opposite, hide this message
+    } else if (passwordConfirmErrMsgField.classList.contains("visible"))
         passwordConfirmErrMsgField.classList.remove("visible");
-    }
 
-    return true
+    return true;
 }
 
-// function sendDataToPhp(signUpForm) {
-//     let request = new XMLHttpRequest();
-//     request.open("POST", "zwa.toad.cz/~volodyeh/TravelGlance/sign-up-process.php");
-//     request.send(signUpForm);
-// }
+
+function sendDataToPhp(signUpForm) {
+    let request = new XMLHttpRequest();
+    request.open("POST", "http://zwa.toad.cz/~volodyeh/sign-up-process.php");
+    request.send(signUpForm);
+}
+
 
 // open make record window button
 function setUpMakeRecordButtonClickListener() {
