@@ -1,3 +1,20 @@
+<?php
+//require "php/login-checking.php";
+//require __DIR__ . '/php/login-checking.php';
+//include findLoginInJSON("");
+
+// if page was loaded by POST method (login form was submitted and this page was reloaded)
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // store value of login from the form
+    $login = $_POST["login"];
+    // check if the login exists in the JSON file
+    $loginExists = findLoginInJSON($login, "/data/users.json");
+//
+    var_dump($loginExists);
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +25,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
-    <script src="scripts/index.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/sign-up-log-in.js"></script>
+    <script src="scripts/make-record.js"></script>
+    <script src="scripts/animation.js"></script>
 </head>
 <body>
 
@@ -25,7 +45,7 @@
 <!--                <a class="hide" id="log-out-button" href="">Log out</a>-->
             </nav>
 
-            <form class="log-in-window top-bar-window" id="log-in-window" action="php/sign-up-process.php" method="post">
+            <form class="log-in-window top-bar-window" id="log-in-window" method="post">
 
                 <input type="button" class="secondary-button" id="log-in-window-close-button" value="Close">
 
@@ -35,6 +55,7 @@
                         <p class="field-title-note">*required</p>
                     </div>
                     <input type="text" class="interactive-field" id="log-in-login-input" name="login" minlength="4" maxlength="20" required>
+                    <p class="field-title-err-msg" id="log-in-login-err-msg">*Login already exists</p>
                 </div>
 
                 <div class="field-cont">
@@ -43,6 +64,7 @@
                         <p class="field-title-note">*required</p>
                     </div>
                     <input type="password" class="interactive-field" id="log-in-password-input" name="password" minlength="8" maxlength="40" required>
+                    <p class="field-title-err-msg" id="log-in-password-err-msg">*At least 8 characters long</p>
                 </div>
 
                 <div class="button-block">

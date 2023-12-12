@@ -232,7 +232,7 @@ nav .vertical-divider {
 }
 
 .log-in-window {
-    height: 18.18em;
+    height: 20.88em;
 }
 :is(.top-bar.navigation, .top-bar.making-record, .top-bar.signing-up) .log-in-window {
     height: 0;
