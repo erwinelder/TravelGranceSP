@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <label class="field-title" for="log-in-login-input">Login</label>
                         <p class="field-title-note">*required</p>
                     </div>
-                    <input type="text" class="interactive-field" id="log-in-login-input" name="login" minlength="4" maxlength="20" required>
+                    <input type="text" id="log-in-login-input" name="login" minlength="4" maxlength="20" required>
                     <p class="field-title-err-msg" id="log-in-login-err-msg">*Login already exists</p>
                 </div>
 
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <label class="field-title" for="log-in-password-input">Password</label>
                         <p class="field-title-note">*required</p>
                     </div>
-                    <input type="password" class="interactive-field" id="log-in-password-input" name="password" minlength="8" maxlength="40" required>
+                    <input type="password" id="log-in-password-input" name="password" minlength="8" maxlength="40" required>
                     <p class="field-title-err-msg" id="log-in-password-err-msg">*At least 8 characters long</p>
                 </div>
 
@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <label class="field-title" for="sign-up-login-input">Login</label>
                         <p class="field-title-note">*required</p>
                     </div>
-                    <input type="text" class="interactive-field" id="sign-up-login-input" name="login" minlength="4" maxlength="20" required>
+                    <input type="text" id="sign-up-login-input" name="login" minlength="4" maxlength="20" required>
                     <p class="field-title-err-msg" id="sign-up-login-err-msg">*Login already exists</p>
                 </div>
 
@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <label class="field-title" for="sign-up-password-input">Password</label>
                         <p class="field-title-note">*required</p>
                     </div>
-                    <input type="password" class="interactive-field" id="sign-up-password-input" name="password" minlength="8" maxlength="40" required>
+                    <input type="password" id="sign-up-password-input" name="password" minlength="8" maxlength="40" required>
                     <p class="field-title-err-msg" id="sign-up-password-err-msg">*At least 8 characters long</p>
                 </div>
 
@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <label class="field-title" for="sign-up-password-confirmation-input">Repeat password</label>
                         <p class="field-title-note">*required</p>
                     </div>
-                    <input type="password" class="interactive-field" id="sign-up-password-confirmation-input" minlength="8" maxlength="40" required>
+                    <input type="password" id="sign-up-password-confirmation-input" minlength="8" maxlength="40" required>
                     <p class="field-title-err-msg" id="sign-up-password-confirmation-err-msg">*Passwords do not match</p>
                 </div>
 
@@ -126,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 <div class="field-cont">
                     <label class="field-title" for="make-record-date">Date</label>
-                    <input type="datetime-local" class="field-date interactive-field" id="make-record-date">
+                    <input type="datetime-local" class="field-date" id="make-record-date">
                 </div>
 
                 <div class="field-cont">
@@ -134,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <label class="field-title" for="make-record-amount">Amount</label>
                         <p class="field-title-note">*required</p>
                     </div>
-                    <input type="number" placeholder="0" class="interactive-field input-ban-specsym" id="make-record-amount" required>
+                    <input type="number" placeholder="0" class="input-ban-specsym" id="make-record-amount" required>
                 </div>
 
                 <div class="field-cont">
@@ -172,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <!-- greetings -->
         <div class="greetings widget glass-morphism" id="greetings">
             <h2 class="greetings-title" id="greetings-title">Good afternoon!</h2>
-            <p class="greetings-massage">You have no trips records in this month</p>
+            <p class="greetings-massage">You have no trip records in this month</p>
         </div>
 
         <!-- records block -->
