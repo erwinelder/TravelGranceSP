@@ -1,20 +1,21 @@
 <?php
 session_start();
 ?>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TravelGlance</title>
-    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="../styles/index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
-    <script src="scripts/main.js"></script>
-    <script src="scripts/sign-up-log-in-log-out.js"></script>
-    <script src="scripts/make-record.js"></script>
-    <script src="scripts/animation.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script src="../scripts/home.js"></script>
+    <script src="../scripts/sign-up-log-in-log-out.js"></script>
+    <script src="../scripts/make-record.js"></script>
+    <script src="../scripts/animation.js"></script>
 </head>
 <body>
 
@@ -28,14 +29,14 @@ session_start();
                 ?>">
                 <input type="button" class="primary-button" id="make-record-button" value="Make record">
                 <span class="vertical-divider"></span>
-                <p class="secondary-button current">Public records</p>
-                <a class="secondary-button" href="pages/home.php">Home</a>
+                <a class="secondary-button" href="../index.php">Public records</a>
+                <p class="secondary-button current">Home</p>
                 <span class="vertical-divider"></span>
                 <input class="primary-button" type="button" id="log-in-button" value="Log in">
                 <input class="primary-button" type="button" id="log-out-button" value="Log out">
             </nav>
 
-            <form class="log-in-window top-bar-window" id="log-in-window" action="php/log-in-process.php" method="post">
+            <form class="log-in-window top-bar-window" id="log-in-window" method="post">
 
                 <input type="button" class="secondary-button" id="log-in-window-close-button" value="Close">
 
@@ -68,7 +69,7 @@ session_start();
 
             </form>
 
-            <form class="sign-up-window top-bar-window" id="sign-up-window" action="php/sign-up-process.php" enctype="multipart/form-data" method="post">
+            <form class="sign-up-window top-bar-window" id="sign-up-window" action="../php/sign-up-process.php" enctype="multipart/form-data" method="post">
 
                 <input type="button" class="secondary-button" id="sign-up-window-close-button" value="Close">
 
@@ -163,6 +164,42 @@ session_start();
 
         </div>
     </div>
+
+
+    <div class="content">
+
+        <!-- greetings -->
+        <div class="greetings widget glass-morphism" id="greetings">
+            <h2 class="greetings-title"><span id="greetings-title">Good afternoon</span><?php
+                    if (isset($_SESSION["isLoggedIn"]) && $_SESSION["isLoggedIn"] == "true")
+                        echo ", ".$_SESSION["login"];
+                    else echo ", person";
+                ?>!</h2>
+            <p class="greetings-massage">You have no trip records in this month</p>
+        </div>
+
+        <!-- records block -->
+        <div class="history-cont widget glass-morphism" id="history-cont">
+            <div class="history" id="history">
+                <div class="record">
+                    <p class="date">16.5</p>
+                    <p class="city">Praha</p>
+                    <p class="amount">4 516 CZK</p>
+                </div>
+            </div>
+<!--            <div class="history-reloading-background" id="history-reloading-background"></div>-->
+            <div class="history-empty-placeholder" id="history-empty-placeholder"></div>
+        </div>
+
+    </div>
+
+    <div class="floating-window-cont make-record-window-cont" id="make-record-window-cont">
+
+        <span class="close-area"></span>
+
+    </div> <!-- make-record-cont -->
+
+<!--    <input type="button" class="action-button floating-action-button" id="make-record-button" value="Udělat záznam">-->
 
 </body>
 </html>

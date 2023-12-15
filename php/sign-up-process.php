@@ -6,6 +6,10 @@ include_once "User.php";
 define("passedLogin", $_POST["login"]);
 define("passedPassword", $_POST["password"]);
 
+// predefine variables to proceed saving passed avatar image
+$avatarsDir = "../data/avatars/";
+$avatarOriginalFilename =  basename($_FILES["avatar"]["name"]);
+$avatarFileExtension = pathinfo($avatarOriginalFilename, PATHINFO_EXTENSION);
 
 // validate input data
 
@@ -22,9 +26,14 @@ if (strlen(passedLogin) > 20) {
 if (strlen(passedPassword) < 8) {
     die("Password must be at least 8 characters long");
 }
-if (strlen(passedPassword) > 20) {
+if (strlen(passedPassword) > 40) {
     die("Password can be max 40 characters long");
 }
+
+// move passed avatar to avatars directory
+$avatarFullPath = $avatarsDir.passedLogin . "." . $avatarFileExtension;
+$avatarPath = passedLogin . "." . $avatarFileExtension;
+move_uploaded_file($_FILES["avatar"]["tmp_name"], $avatarFullPath);
 
 // hash the password
 $hashedPassword = password_hash(passedPassword, PASSWORD_DEFAULT);
@@ -35,9 +44,9 @@ $hashedPassword = password_hash(passedPassword, PASSWORD_DEFAULT);
 $usersJsonData = file_get_contents("../data/users.json");
 $usersJsonDecodedData = json_decode($usersJsonData);
 // append new user's data to the already existing ones
-$usersJsonDecodedData[] = new User(passedLogin, $hashedPassword);
+$usersJsonDecodedData[] = new User(passedLogin, $hashedPassword, $avatarPath);
 // write data with a new user to the JSON file
 file_put_contents("../data/users.json", json_encode($usersJsonDecodedData));
 
-// redirect back to the main page
+// redirect back to the main page (public records page)
 header("Location: ../index.php");

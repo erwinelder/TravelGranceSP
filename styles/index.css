@@ -119,7 +119,7 @@ input::-webkit-inner-spin-button {
     background: var(--semi-transparent-bg);
     backdrop-filter: saturate(150%) blur(15px);
     -webkit-backdrop-filter: saturate(150%) blur(15px);
-    box-shadow: 0 15px 50px -30px rgba(0,0,0,0.1);
+    box-shadow: 0 20px 30px -30px rgba(0, 0, 0, .2);
 }
 
 
@@ -145,6 +145,7 @@ input::-webkit-inner-spin-button {
     align-items: center;
     /*overflow-y: scroll;*/
 
+    box-shadow: 0 15px 25px -20px rgba(0, 0, 0, .2);
     transition: var(--top-bar-tran-dur) transform;
 }
 .top-bar.navigation:hover {
@@ -168,7 +169,6 @@ input::-webkit-inner-spin-button {
 }
 
 nav {
-    width: 33em;
     height: 2.36em;
     padding-top: .7em;
     padding-bottom: .7em;
@@ -183,6 +183,18 @@ nav {
         var(--top-bar-tran-dur) height,
         var(--top-bar-tran-dur) padding-top,
         var(--top-bar-tran-dur) padding-bottom;
+}
+nav.logged-out {
+    width: 33.65em;
+}
+nav.logged-in {
+    width: 34.4em;
+}
+nav.logged-out #log-out-button {
+    display: none;
+}
+nav.logged-in #log-in-button {
+    display: none;
 }
 .top-bar:is(.logging-in, .signing-up, .making-record) nav {
     width: 16em;
@@ -334,7 +346,7 @@ nav .vertical-divider {
     align-items: center;
 
     background: var(--semi-transparent-bg);
-    box-shadow: 0 5px 20px -10px rgba(0,0,0,.1);
+    box-shadow: 0 10px 25px -12px rgba(0, 0, 0, .2);
     cursor: pointer;
     transition: .2s transform;
 }

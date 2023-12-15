@@ -6,6 +6,8 @@ include_once "UserDataCheck.php";
 $inputData = json_decode(file_get_contents("php://input"), true);
 define("passedLogin", $inputData["login"]);
 define("passedPassword", $inputData["password"]);
+//define("passedLogin", $_POST["login"]);
+//define("passedPassword", $_POST["password"]);
 
 
 // validate input data
@@ -21,7 +23,7 @@ if (strlen(passedLogin) > 20) {
 if (strlen(passedPassword) < 8) {
     die("Password must be at least 8 characters long");
 }
-if (strlen(passedPassword) > 20) {
+if (strlen(passedPassword) > 40) {
     die("Password can be max 40 characters long");
 }
 
@@ -37,6 +39,8 @@ $usersList = json_decode($usersJsonData);
 
 // define variable to store searching result
 $result = new UserDataCheck(false, false);
+// define variable to store avatar path got from the JSON file
+$avatarName = "";
 // check if fetched JSON data already contain the login
 foreach ($usersList as $user) {
     // return TRUE if login already exists
@@ -46,9 +50,19 @@ foreach ($usersList as $user) {
         // if the passwords match, save TRUE to the $result variable and break the cycle
         if (password_verify(passedPassword, $user->password)) {
             $result->passwordMatches = true;
+            $avatarName = $user->avatarName;
         }
         break;
     }
 }
-// return result (TRUE if login was founded in the JSON file and the passwords match, or FALSE if not)
+
+// after successful log in save "true" to the "isLoggedIn" value in the php session storage
+if ($result->loginExists && $result->passwordMatches) {
+    session_start();
+    $_SESSION["isLoggedIn"] = "true";
+    $_SESSION["login"] = passedLogin;
+    $_SESSION["avatarPath"] = "../data/avatars/" . $avatarName;
+}
+
+// return results of checking data in the JSON file as object (for login and password)
 echo json_encode($result);
