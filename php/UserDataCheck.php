@@ -5,10 +5,8 @@ class UserDataCheck
     public $loginExists;
     public $passwordMatches;
 
-    /**
-     * @param $loginExists
-     * @param $passwordMatches
-     */
+    /** @param bool $loginExists
+     * @param bool $passwordMatches */
     public function __construct($loginExists, $passwordMatches)
     {
         $this->loginExists = $loginExists;

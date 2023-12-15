@@ -1,5 +1,17 @@
 <?php
 session_start();
+
+if (!(isset($_SESSION["isLoggedIn"])))
+    header("Location: ../index.php");
+
+$navbarClass = "logged-in";
+$username = $_SESSION["login"];
+$usernameGreetings = ", " . $_SESSION["login"];
+
+$avatarPath = "../data/avatars/default.jpg";
+if (strlen($_SESSION["avatarFilename"]) > 0)
+    $avatarPath = "../data/avatars/" . $_SESSION["avatarFilename"];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +25,7 @@ session_start();
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
     <script src="../scripts/main.js"></script>
     <script src="../scripts/home.js"></script>
-    <script src="../scripts/sign-up-log-in-log-out.js"></script>
+    <script src="../scripts/sign-up-log-in-out-edit.js"></script>
     <script src="../scripts/make-record.js"></script>
     <script src="../scripts/animation.js"></script>
 </head>
@@ -22,11 +34,7 @@ session_start();
     <div class="top-bar-cont">
         <div class="top-bar glass-morphism navigation" id="top-bar">
 
-            <nav id="navbar" class="<?php
-                    if (isset($_SESSION["isLoggedIn"]) && $_SESSION["isLoggedIn"] == "true")
-                        echo "logged-in";
-                    else echo "logged-out";
-                ?>">
+            <nav id="navbar" class="<?php echo $navbarClass; ?>">
                 <input type="button" class="primary-button" id="make-record-button" value="Make record">
                 <span class="vertical-divider"></span>
                 <a class="secondary-button" href="../index.php">Public records</a>
@@ -36,7 +44,7 @@ session_start();
                 <input class="primary-button" type="button" id="log-out-button" value="Log out">
             </nav>
 
-            <form class="log-in-window top-bar-window" id="log-in-window" method="post">
+            <form class="log-in-window top-bar-window" id="log-in-window">
 
                 <input type="button" class="secondary-button" id="log-in-window-close-button" value="Close">
 
@@ -119,7 +127,61 @@ session_start();
 
             </form>
 
-            <form class="make-record-window top-bar-window" id="make-record-window" action="" >
+            <form class="edit-account-window top-bar-window" id="edit-account-window" action="../php/edit-account-data-process.php" enctype="multipart/form-data" method="post">
+
+                <input type="button" class="secondary-button" id="edit-account-window-close-button" value="Close">
+
+                <div class="field-cont">
+                    <div class="field-title-cont">
+                        <label class="field-title" for="edit-account-password-input">Password</label>
+                        <p class="field-title-note">*required</p>
+                    </div>
+                    <input type="password" id="edit-account-password-input" name="password" minlength="8" maxlength="40" required>
+                    <p class="field-title-err-msg" id="edit-account-password-err-msg">*At least 8 characters long</p>
+                </div>
+
+                <div class="field-cont">
+                    <div class="field-title-cont">
+                        <label class="field-title" for="edit-account-login-input">New login</label>
+                    </div>
+                    <input type="text" id="edit-account-login-input" name="login" placeholder="<?php echo $username; ?>" minlength="4" maxlength="20">
+                    <p class="field-title-err-msg" id="edit-account-login-err-msg">*Login already exists</p>
+                </div>
+
+                <div class="field-cont">
+                    <div class="field-title-cont">
+                        <label class="field-title" for="edit-account-new-password-input">New password</label>
+                    </div>
+                    <input type="password" id="edit-account-new-password-input" name="newPassword" minlength="8" maxlength="40">
+                    <p class="field-title-err-msg" id="edit-account-new-password-err-msg">*At least 8 characters long</p>
+                </div>
+
+                <div class="field-cont">
+                    <div class="field-title-cont">
+                        <label class="field-title" for="edit-account-new-password-confirmation-input">Repeat password</label>
+                    </div>
+                    <input type="password" id="edit-account-new-password-confirmation-input" minlength="8" maxlength="40">
+                    <p class="field-title-err-msg" id="edit-account-new-password-confirmation-err-msg">*Passwords do not match</p>
+                </div>
+
+                <div class="field-cont">
+                    <div class="field-title-cont">
+                        <label class="field-title" for="edit-account-avatar-input">New avatar</label>
+                    </div>
+                    <input type="file" id="edit-account-avatar-input" name="avatar" accept="image/jpeg">
+                    <p class="field-title-err-msg" id="edit-account-avatar-err-msg">*</p>
+                </div>
+
+                <div class="button-block">
+                    <hr class="big-hr">
+                    <div class="button-block-content">
+                        <input type="submit" class="primary-button" id="edit-account-submit-button" value="Save changes">
+                    </div>
+                </div>
+
+            </form>
+
+            <form class="make-record-window top-bar-window" id="make-record-window">
 
                 <input type="button" class="secondary-button" id="make-record-window-close-button" value="Close">
 
@@ -169,13 +231,10 @@ session_start();
     <div class="content">
 
         <!-- greetings -->
-        <div class="greetings widget glass-morphism" id="greetings">
-            <h2 class="greetings-title"><span id="greetings-title">Good afternoon</span><?php
-                    if (isset($_SESSION["isLoggedIn"]) && $_SESSION["isLoggedIn"] == "true")
-                        echo ", ".$_SESSION["login"];
-                    else echo ", person";
-                ?>!</h2>
-            <p class="greetings-massage">You have no trip records in this month</p>
+        <div class="personal-data widget glass-morphism" id="personal-data">
+            <h2 class="greetings-title"><span id="greetings-title">Good afternoon</span><?php echo $usernameGreetings; ?>!</h2>
+            <img src="<?php echo $avatarPath ?>" alt="user avatar" class="personal-data-avatar">
+            <input type="button" value="Edit account data" class="secondary-button" id="edit-account-button">
         </div>
 
         <!-- records block -->

@@ -1,10 +1,10 @@
 <?php
 
 // declare constants for input data
-$login = json_decode(file_get_contents("php://input"), true);
+$passedLogin = json_decode(file_get_contents("php://input"), true);
 
 // call function to find if the passed login is already exists in the JSON file and save the return result
-$loginSearchingResult = findLoginInJSON($login);
+$loginSearchingResult = findLoginInJSON($passedLogin);
 
 // return result of searching back to the caller
 header("Content-Type: application/json");

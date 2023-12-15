@@ -23,6 +23,10 @@ function changeTopBarViewToAnother(newView) {
         }
         id("top-bar").classList.add("signing-up");
     }
+    else if (newView === "edit-account") {
+        id("top-bar").classList.remove("navigation");
+        id("top-bar").classList.add("editing-account");
+    }
     else if (newView === "make-record") {
         id("make-record-window").classList.add("new");
         id("top-bar").classList.remove("navigation");
@@ -39,6 +43,11 @@ function changeTopBarViewToAnother(newView) {
             id("top-bar").classList.remove("signing-up");
             setTimeout(() => {
                 resetSignUpWindowInputData();
+            }, 350);
+        } else if (id("top-bar").classList.contains("editing-account")) {
+            id("top-bar").classList.remove("editing-account");
+            setTimeout(() => {
+                resetEditAccountWindowInputData();
             }, 350);
         } else if (id("top-bar").classList.contains("making-record")) {
             id("top-bar").classList.remove("making-record");
@@ -85,10 +94,26 @@ function setUpChangeToSignUpWindowButtonClickListener() {
         changeTopBarViewToAnother("sign-up");
     }
 }
-/** Set up click behaviour on close button in the sign-up window. */
+/** Set up click behaviour on the close button in the sign-up window. */
 function setUpCloseSignUpWindowButtonClickListener() {
     id("sign-up-window-close-button").onclick = () => {
         // show navigation buttons in the top-bar rather than sign-up window
+        changeTopBarViewToAnother("navigation");
+    }
+}
+
+/** Set up click behaviour on the edit account button. */
+function setUpEditAccountButtonClickListener() {
+    id("edit-account-button").onclick = () => {
+        // show edit account window in the top-bar rather than navigation buttons
+        changeTopBarViewToAnother("edit-account");
+        id("edit-account-login-input").value = id("edit-account-login-input").placeholder;
+    }
+}
+/** Set up click behaviour on the close button in the edit account window. */
+function setUpCloseEditAccountWindowButtonClickListener() {
+    id("edit-account-window-close-button").onclick = () => {
+        // show edit account window in the top-bar rather than navigation buttons
         changeTopBarViewToAnother("navigation");
     }
 }
@@ -99,68 +124,9 @@ function setUpMakeRecordButtonClickListener() {
         changeTopBarViewToAnother("make-record");
     }
 }
-/** Set up click behaviour on close button in the make record window. */
+/** Set up click behaviour on the close button in the make record window. */
 function setUpCloseMakeRecordWindowButtonClickListener() {
     id("make-record-window-close-button").onclick = () => {
         changeTopBarViewToAnother("navigation");
     }
-}
-
-
-function calculateScaleX (clickEl, windowEl_cont) {
-    return ( clickEl.offsetWidth / ( windowEl_cont.lastElementChild.offsetWidth ) );
-}
-
-function openFloatingWindow (clickEl, windowEl_cont, windowEl, scaleX) {
-    let transition = `opacity .4s, transform .4s .03s`;
-
-    windowEl_cont.classList.add('floating-window-cont-visible');
-
-    clickEl.style.transition = transition;
-    let windowEl_full_height = windowEl.clientHeight;
-    let scaleY = scaleX / ((windowEl_full_height * scaleX) / clickEl.offsetHeight);
-
-    let clickEl_position_X = (
-        windowEl.getBoundingClientRect().left + (windowEl.offsetWidth / 2) - clickEl.getBoundingClientRect().left - (clickEl.offsetWidth / 2)
-    ) * Math.max(scaleX, scaleY);
-    let clickEl_position_Y = ( windowEl.getBoundingClientRect().top + (windowEl.offsetHeight / 2) - clickEl.getBoundingClientRect().top - (clickEl.offsetHeight / 2) ) * Math.max(scaleX, scaleY);
-
-    windowEl.style.transform = `translate(0px, 0px) scale(${scaleX}, ${scaleY})`;
-
-    let top_position = {
-        x: clickEl.getBoundingClientRect().left - windowEl.getBoundingClientRect().left,
-        y: clickEl.getBoundingClientRect().bottom - windowEl.getBoundingClientRect().bottom
-    };
-
-    windowEl.style.transform = `translate(${top_position.x}px, ${top_position.y}px) scale(${scaleX}, ${scaleY})`;
-
-    setTimeout(() => {
-        windowEl.style.transition = transition;
-        windowEl_cont.classList.add('floating-window-cont-darker');
-
-        clickEl.style.opacity = '0';
-        clickEl.style.transform = `scale(${Math.min(1 * 1 / scaleX, 1 * 1 / scaleY)}) translate(${clickEl_position_X}px, ${clickEl_position_Y}px)`;
-    }, 1);
-
-    return top_position;
-}
-
-function closeFloatingWindow (clickEl, windowEl_cont, windowEl) {
-
-    clickEl.style.transition = `opacity .5s, transform .4s`;
-    clickEl.style.opacity = '1';
-    clickEl.style.transform = 'scale(1) translateY(0px)';
-
-    windowEl.style.transition = `opacity .35s .15s, transform .4s`;
-    windowEl_cont.classList.remove('floating-window-cont-darker');
-
-    setTimeout(() => {
-        windowEl_cont.classList.remove('floating-window-cont-visible');
-        windowEl.style.transform = 'translateY(0px) scale(1)';
-        windowEl.style.transition = 'all 0s';
-
-        clickEl.style.transition = null;
-        clickEl.style.transform = null;
-        clickEl.style.opacity = null;
-    }, 390);
 }

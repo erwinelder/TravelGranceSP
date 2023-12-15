@@ -6,8 +6,6 @@ include_once "UserDataCheck.php";
 $inputData = json_decode(file_get_contents("php://input"), true);
 define("passedLogin", $inputData["login"]);
 define("passedPassword", $inputData["password"]);
-//define("passedLogin", $_POST["login"]);
-//define("passedPassword", $_POST["password"]);
 
 
 // validate input data
@@ -27,9 +25,6 @@ if (strlen(passedPassword) > 40) {
     die("Password can be max 40 characters long");
 }
 
-
-// hash the password
-$hashedPassword = password_hash(passedPassword, PASSWORD_DEFAULT);
 
 // save new user's data to the JSON file
 
@@ -61,7 +56,7 @@ if ($result->loginExists && $result->passwordMatches) {
     session_start();
     $_SESSION["isLoggedIn"] = "true";
     $_SESSION["login"] = passedLogin;
-    $_SESSION["avatarPath"] = "../data/avatars/" . $avatarName;
+    $_SESSION["avatarFilename"] = $avatarName;
 }
 
 // return results of checking data in the JSON file as object (for login and password)

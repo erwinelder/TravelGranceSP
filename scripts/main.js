@@ -90,17 +90,6 @@ function setUpListenersForInputsInForm(form) {
 }
 
 
-function uploadGreetingsTitle() {
-    let greetingsTitleEl = id("greetings-title");
-    let time = (new Date()).getHours();
-
-    if (6 <= time && time <= 12) greetingsTitleEl.innerText = "Good morning";
-    else if (13 <= time && time <= 17) greetingsTitleEl.innerText = "Good afternoon";
-    else if (18 <= time && time <= 22) greetingsTitleEl.innerText = "Good evening";
-    else if (23 <= time || time <= 5) greetingsTitleEl.innerText = "Good night";
-}
-
-
 function preventDefaultOnAllActiveLinks() {
     let links = document.querySelector(".secondary-button.current");
     for (let i = 0; i < links.length; i++) {
