@@ -1,7 +1,7 @@
 <?php
 
 include_once "User.php";
-include_once "login-checking.php";
+include_once "login-searching-process.php";
 
 // declare constants for input data
 define("passedLogin", $_POST["login"]);
@@ -32,7 +32,7 @@ if (strlen(passedLogin) < 4) {
 if (strlen(passedLogin) > 20) {
     die("Login can be max 20 characters long");
 }
-if (findLoginInJSON(passedLogin)) {
+if (loginExistsInJson(passedLogin)) {
     die("Login already exists");
 }
 // validate input password

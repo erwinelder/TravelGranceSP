@@ -1,7 +1,7 @@
 <?php
 
 include_once "User.php";
-include_once "login-checking.php";
+include_once "login-search.php";
 
 session_start();
 
@@ -22,7 +22,8 @@ $newAvatarIsUploaded = true;
 // check if an avatar image was uploaded
 if ($_FILES["avatar"]["error"] == UPLOAD_ERR_NO_FILE) {
     $newAvatarIsUploaded = false;
-    $newAvatarFullFilename = passedLogin . "." . $currentAvatarFileExtension;
+    if (strlen($currentAvatarFullFilename) != 0)
+        $newAvatarFullFilename = passedLogin . "." . $currentAvatarFileExtension;
 } else {
     $avatarOriginalFilename =  basename($_FILES["avatar"]["name"]);
     $newAvatarFileExtension = pathinfo($avatarOriginalFilename, PATHINFO_EXTENSION);
@@ -36,20 +37,25 @@ if (strlen(passedLogin) < 4) {
     http_response_code(400);
     echo "Login must be at least 4 characters long";
 //    die("Login must be at least 4 characters long");
-}
-if (strlen(passedLogin) > 20) {
+} else if (strlen(passedLogin) > 20) {
     die("Login can be max 20 characters long");
 }
-if (currentLogin !== passedLogin && findLoginInJSON(passedLogin)) {
+if (currentLogin !== passedLogin && loginExistsInJson(passedLogin)) {
     die("Login already exists");
 }
-// validate input password
-if (strlen(passedNewPassword) != 0 && strlen(passedNewPassword) < 8) {
+// validate password
+if (strlen(passedPassword) < 8) {
     die("Password must be at least 8 characters long");
-}
-if (strlen(passedNewPassword) > 40) {
+} else if (strlen(passedPassword) > 40) {
     die("Password can be max 40 characters long");
 }
+// validate new password
+if (strlen(passedNewPassword) != 0 && strlen(passedNewPassword) < 8) {
+    die("New password must be at least 8 characters long");
+} else if (strlen(passedNewPassword) > 40) {
+    die("New password can be max 40 characters long");
+}
+
 
 // hash the password
 $hashedPassword = password_hash(passedNewPassword, PASSWORD_DEFAULT);
@@ -64,11 +70,12 @@ if ($newAvatarIsUploaded) {
 } else if (file_exists($avatarsDir . $currentAvatarFullFilename))
     rename($avatarsDir . $currentAvatarFullFilename, $avatarsDir . $newAvatarFullFilename);
 
-// save new user's data to the JSON file
 
 // get data from the JSON file and decode it
 $usersJsonData = file_get_contents("../data/users.json");
 $usersList = json_decode($usersJsonData);
+
+// save new user's data to the JSON file
 
 // change user data in the list from the JSON file
 foreach ($usersList as $user) {

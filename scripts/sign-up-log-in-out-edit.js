@@ -93,7 +93,7 @@ async function checkSignUpLoginValidation(login, loginField, loginErrMsgField) {
         return false;
 
     // if there is an account with this login, show the corresponding message and return FALSE
-    let loginCheckingResult = await checkIfLoginAlreadyExists(login);
+    let loginCheckingResult = await checkIfLoginExistsInJson(login);
     if(loginCheckingResult) {
         setFieldValidationStatus(false, loginField, loginErrMsgField, "Login already exists");
         return false;
@@ -105,16 +105,16 @@ async function checkSignUpLoginValidation(login, loginField, loginErrMsgField) {
 }
 
 /** Check if the login already exists.
- * @param {string} searchedLogin
+ * @param {string} login
  * @return {Promise<boolean>}
  */
-async function checkIfLoginAlreadyExists(searchedLogin) {
-    return fetch("../php/login-checking.php", {
+async function checkIfLoginExistsInJson(login) {
+    return fetch("../php/login-checking-process.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(searchedLogin)
+        body: JSON.stringify(login)
     })
         .then(response => {
             if (!response.ok)
@@ -291,9 +291,9 @@ async function checkIfLogInDataExist(login, password) {
 
 /** Set up click behaviour on the log-out button in the navigation top bar. */
 function setUpLogOutButtonClickListener() {
-    id("log-out-button").onclick = () => {
+    id("log-out-button").onclick = async () => {
         // make fetch request to the PHP script to delete all relative session variables and to destroy a PHP session
-        fetch("../php/log-out-process.php", {
+        await fetch("../php/log-out-process.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -307,7 +307,7 @@ function setUpLogOutButtonClickListener() {
                 console.log("Error during logout: ", error);
             });
 
-        // redirect to the index.php page
+        // after logout, redirect to the index.php page
         location.href = "../index.php";
     }
 }
@@ -353,7 +353,7 @@ function setUpEditAccountSubmitButtonClickListener() {
         submitEvent.preventDefault();
 
         // validate inputs data in the sign-up window
-        if (await checkEditAccountFormValidation(
+        let validationResult = await checkEditAccountFormValidation(
             id("edit-account-login-input").value,
             id("edit-account-login-input"),
             id("edit-account-login-err-msg"),
@@ -366,8 +366,10 @@ function setUpEditAccountSubmitButtonClickListener() {
             id("edit-account-new-password-confirmation-input").value,
             id("edit-account-new-password-confirmation-input"),
             id("edit-account-new-password-confirmation-err-msg")
-        ))
-            // if validation was passed, send form manually
+        )
+
+        // if validation was passed, send form manually
+        if (validationResult)
             submitEvent.target.form.submit();
     }
 }
@@ -385,7 +387,7 @@ function setUpEditAccountSubmitButtonClickListener() {
  * @param {string} newPasswordConfirm
  * @param {HTMLInputElement} newPasswordConfirmField new password confirmation input element
  * @param {HTMLElement} newPasswordConfirmErrMsgField new password confirmation error message field element
- * @return {Promise<boolean>} */
+ // * @return {boolean} */
 async function checkEditAccountFormValidation(
     login, loginField, loginErrMsgField,
     password, passwordField, passwordErrMsgField,
@@ -405,7 +407,11 @@ async function checkEditAccountFormValidation(
         );
 
     // if the result of any validation was false, return FALSE
-    return (loginValidationResult && passwordValidationResult);
+    if (!(loginValidationResult && passwordValidationResult))
+        return false;
+
+    // return a result of password verifying in the JSON file
+    return await verifyPassword(password, passwordField, passwordErrMsgField);
 }
 
 /** Check login validation in inputs in the sign-up window.
@@ -437,7 +443,7 @@ async function checkEditAccountLoginValidation(login, loginField, loginErrMsgFie
  * @return {Promise<boolean>}
  */
 async function checkIfLoginCanBeChanged(login) {
-    return fetch("../php/login-change-checking.php", {
+    return fetch("../php/login-change-checking-process.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -486,6 +492,47 @@ function checkEditAccountPasswordValidation(
 
     // if new passwords match, returns TRUE, else returns FALSE
     return validatePasswordsMatching(newPassword, newPasswordConfirm, newPasswordConfirmField, newPasswordConfirmErrMsgField)
+}
+
+/** Verify password.
+ * @param {string} password
+ * @param {HTMLInputElement} passwordField login input element
+ * @param {HTMLElement} passwordErrMsgField login error message field element
+ * @return {Promise<boolean>} */
+async function verifyPassword(password, passwordField, passwordErrMsgField) {
+    let verifyingResult = await verifyPasswordInJson(password);
+
+    // if the password does not match, show the corresponding message and return FALSE
+    if(!verifyingResult) {
+        setFieldValidationStatus(false, passwordField, passwordErrMsgField, "Password does not match");
+        return false;
+    // if not, hide this message and mark the login field and valid
+    } else if (passwordErrMsgField.classList.contains("visible"))
+        setFieldValidationStatus(true, passwordField, passwordErrMsgField);
+
+    return verifyingResult;
+}
+
+/** Verify password in the JSON file.
+ * @param {string} password
+ * @return {Promise<boolean>} */
+async function verifyPasswordInJson(password) {
+    return fetch("../php/password-verifying-process.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(password)
+    })
+        .then(response => {
+            if (!response.ok)
+                throw new Error("Password verifying failed.");
+            return response.json();
+        })
+        .catch(error => {
+            console.log(`Error during verifying the password: ${error}`);
+            return false;
+        });
 }
 
 
