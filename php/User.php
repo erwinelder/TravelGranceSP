@@ -1,16 +1,19 @@
 <?php
 
 class User {
+    public $id;
     public $login;
     public $password;
-    public $avatarName;
+    public $avatarFilename;
 
-    /** @param $login
-     * @param $password
-     * @param $avatarName */
-    public function __construct($login, $password, $avatarName) {
+    /** @param int $id
+     * @param string $login
+     * @param string $password
+     * @param string $avatarFilename */
+    public function __construct($id, $login, $password, $avatarFilename) {
+        $this->id = $id;
         $this->login = $login;
         $this->password = $password;
-        $this->avatarName = $avatarName;
+        $this->avatarFilename = $avatarFilename;
     }
 }

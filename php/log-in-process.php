@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 include_once "UserDataCheck.php";
 
 // declare constants for input data
@@ -34,6 +36,7 @@ $usersList = json_decode($usersJsonData);
 $result = new UserDataCheck(false, false);
 // define variable to store an avatar filename got from the JSON file
 $avatarFilename = "";
+$userId = 0;
 // check if fetched JSON data already contain the login
 foreach ($usersList as $user) {
     // return TRUE if login already exists
@@ -43,7 +46,8 @@ foreach ($usersList as $user) {
         // if the passwords match, save TRUE to the $result variable and break the cycle
         if (password_verify(passedPassword, $user->password)) {
             $result->passwordMatches = true;
-            $avatarFilename = $user->avatarName;
+            $avatarFilename = $user->avatarFilename;
+            $userId = $user->id;
         }
         break;
     }
@@ -51,7 +55,7 @@ foreach ($usersList as $user) {
 
 // after successful log in save "true" to the "isLoggedIn" value in the php session storage
 if ($result->loginExists && $result->passwordMatches) {
-    session_start();
+    $_SESSION["userId"] = $userId;
     $_SESSION["isLoggedIn"] = "true";
     $_SESSION["login"] = passedLogin;
     $_SESSION["avatarFilename"] = $avatarFilename;

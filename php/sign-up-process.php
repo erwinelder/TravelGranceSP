@@ -1,7 +1,9 @@
 <?php
 
+session_start();
+
 include_once "User.php";
-include_once "login-searching-process.php";
+include_once "login-search.php";
 
 // declare constants for input data
 define("passedLogin", $_POST["login"]);
@@ -56,14 +58,16 @@ if ($avatarIsUploaded) {
 
 // get data from the JSON file and decode it
 $usersJsonData = file_get_contents("../data/users.json");
-$usersJsonDecodedData = json_decode($usersJsonData);
+$usersList = json_decode($usersJsonData);
+// define id for the new user
+$newUserId = count($usersList) + 1;
 // append new user's data to the already existing ones
-$usersJsonDecodedData[] = new User(passedLogin, $hashedPassword, $avatarFilename);
+$usersList[] = new User($newUserId, passedLogin, $hashedPassword, $avatarFilename);
 // write data with a new user to the JSON file
-file_put_contents("../data/users.json", json_encode($usersJsonDecodedData));
+file_put_contents("../data/users.json", json_encode($usersList));
 
 // after successful sing up, mark down in the PHP session that this user is logged in
-session_start();
+$_SESSION["userId"] = $newUserId;
 $_SESSION["isLoggedIn"] = "true";
 $_SESSION["login"] = passedLogin;
 $_SESSION["avatarFilename"] = $avatarFilename;

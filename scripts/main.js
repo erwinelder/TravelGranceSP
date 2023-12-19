@@ -36,15 +36,15 @@ function setUpPageOnLoad() {
     setUpCloseLogInWindowButtonClickListener();
     setUpLogInSubmitButtonClickListener();
     setUpChangeToSignUpWindowButtonClickListener();
-    addInputListenersToLoginInputField(id("log-in-login-input"), id("log-in-login-err-msg"));
-    addInputListenersToPasswordInputField(id("log-in-password-input"), id("log-in-password-err-msg"));
+    addInputListenerToLoginInputField(id("log-in-login-input"), id("log-in-login-err-msg"));
+    addInputListenerToPasswordInputField(id("log-in-password-input"), id("log-in-password-err-msg"));
     // set up click behaviour on buttons connected with the sign-up window
     setUpCloseSignUpWindowButtonClickListener();
     setUpSignUpSubmitButtonClickListener();
     setUpChangeToLogInWindowButtonClickListener();
-    addInputListenersToLoginInputField(id("sign-up-login-input"), id("sign-up-login-err-msg"));
-    addInputListenersToPasswordInputField(id("sign-up-password-input"), id("sign-up-password-err-msg"));
-    addInputListenersToPasswordConfirmInputField(
+    addInputListenerToLoginInputField(id("sign-up-login-input"), id("sign-up-login-err-msg"));
+    addInputListenerToPasswordInputField(id("sign-up-password-input"), id("sign-up-password-err-msg"));
+    addInputListenerToPasswordConfirmInputField(
         id("sign-up-password-input"), id("sign-up-password-confirmation-input"), id("sign-up-password-confirmation-err-msg")
     );
     // set up click behaviour on the log-out button in the navigation top bar
@@ -52,6 +52,8 @@ function setUpPageOnLoad() {
     // set up click on buttons connected with the make record window
     setUpMakeRecordButtonClickListener();
     setUpCloseMakeRecordWindowButtonClickListener();
+    setUpMakeRecordSubmitButtonClickListener();
+    addInputListenersToNumberInputField(id("make-record-amount"), id("make-record-amount-err-msg"));
 
     // other
     preventDefaultOnAllActiveLinks();

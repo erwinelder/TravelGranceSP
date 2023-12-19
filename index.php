@@ -35,7 +35,7 @@ session_start();
                 <input class="primary-button" type="button" id="log-out-button" value="Log out">
             </nav>
 
-            <form class="log-in-window top-bar-window" id="log-in-window" action="php/log-in-process.php" method="post">
+            <form class="log-in-window top-bar-window" id="log-in-window">
 
                 <input type="button" class="secondary-button" id="log-in-window-close-button" value="Close">
 

@@ -195,7 +195,8 @@ if (strlen($_SESSION["avatarFilename"]) > 0)
                         <label class="field-title" for="make-record-amount">Amount</label>
                         <p class="field-title-note">*required</p>
                     </div>
-                    <input type="number" placeholder="0" class="input-ban-specsym" id="make-record-amount" required>
+                    <input type="number" placeholder="0" step="0.01" id="make-record-amount" required>
+                    <p class="field-title-err-msg" id="make-record-amount-err-msg">*Is not a number</p>
                 </div>
 
                 <div class="field-cont">

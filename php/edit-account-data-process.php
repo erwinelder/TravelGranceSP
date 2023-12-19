@@ -8,7 +8,7 @@ session_start();
 // declare constants for input data
 define("currentLogin", $_SESSION["login"]);
 define("passedPassword", $_POST["password"]);
-define("passedLogin", $_POST["login"]);
+define("passedLogin", strlen($_POST["login"]) != 0 ? $_POST["login"] : currentLogin);
 define("passedNewPassword", $_POST["newPassword"]);
 
 // predefine variables to proceed saving avatar image
@@ -87,7 +87,7 @@ foreach ($usersList as $user) {
         if (strlen(passedNewPassword) != 0)
             $user->password = $hashedPassword;
 
-        $user->avatarName = $newAvatarFullFilename;
+        $user->avatarFilename = $newAvatarFullFilename;
         $_SESSION["avatarFilename"] = $newAvatarFullFilename;
     }
 }

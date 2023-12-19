@@ -183,12 +183,13 @@ nav {
         var(--top-bar-tran-dur) padding-bottom;
 }
 nav.logged-out {
-    width: 33.65em;
+    width: 22.35em;
+    padding-left: .5em;
 }
 nav.logged-in {
     width: 34.4em;
 }
-nav.logged-out #log-out-button {
+nav.logged-out :is(#make-record-button, #log-out-button, .vertical-divider:first-of-type) {
     display: none;
 }
 nav.logged-in #log-in-button {
@@ -244,6 +245,9 @@ nav .vertical-divider {
     transition: var(--top-bar-tran-dur) height,
     var(--top-bar-tran-dur) padding-top,
     var(--top-bar-tran-dur) padding-bottom;
+}
+.top-bar-window::-webkit-scrollbar {
+    display: none;
 }
 
 .log-in-window {
@@ -307,7 +311,7 @@ nav .vertical-divider {
     grid-template-columns: 0 1fr 1fr 0;
     grid-template-areas:
 		". personal-data history-widget ."
-		". . history-widget ."
+		". . history-widget .";
 }
 
 
@@ -356,16 +360,27 @@ nav .vertical-divider {
     /*box-sizing: border-box;*/
     font-size: 1.05rem;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    justify-content: center;
+    column-gap: 1em;
+    grid-template-areas:
+		"date date"
+		"city amount";
 
     background: var(--semi-transparent-bg);
     box-shadow: 0 10px 25px -12px rgba(0, 0, 0, .2);
     cursor: pointer;
     transition: .2s transform;
 }
+.record .date {
+    grid-area: date;
+    justify-self: center;
+}
+.record .city {
+    grid-area: city;
+}
 .record .amount {
+    grid-area: amount;
     white-space: nowrap;
 }
 

@@ -109,7 +109,7 @@ async function checkSignUpLoginValidation(login, loginField, loginErrMsgField) {
  * @return {Promise<boolean>}
  */
 async function checkIfLoginExistsInJson(login) {
-    return fetch("../php/login-checking-process.php", {
+    return fetch("../php/login-searching-process.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -259,7 +259,7 @@ async function attemptLogIn(
     return false;
 }
 
-/** Check if the login already exists.
+/** Check if the login data exist in the JSON file.
  * @param {string} login
  * @param {string} password
  * @return {Promise<UserDataCheck>} */
@@ -422,7 +422,7 @@ async function checkEditAccountFormValidation(
 async function checkEditAccountLoginValidation(login, loginField, loginErrMsgField) {
 
     // if login length is invalid, show the corresponding message and return FALSE
-    if (!validateLoginLength(login, loginField, loginErrMsgField))
+    if (login.length !== 0 && !validateLoginLength(login, loginField, loginErrMsgField))
         return false;
 
     // if there is an account with this login, show the corresponding message and return FALSE
@@ -599,6 +599,25 @@ function validatePasswordsMatching(
     return true;
 }
 
+/** Check if value number is valid. Returns TRUE, if is valid, and FALSE, if not.
+ * @param {HTMLInputElement} field input element
+ * @param {HTMLInputElement} errMsgField input error message field element */
+function validateInputNumber(field, errMsgField) {
+
+    if (field.value < 0) {
+        setFieldValidationStatus(false, field, errMsgField, "Cannot be negative");
+        field.classList.add("validation-checking");
+        return false;
+    } else if (!(field.checkValidity())) {
+        setFieldValidationStatus(false, field, errMsgField, "Is not a number");
+        field.classList.add("validation-checking");
+        return false;
+    } else
+        setFieldValidationStatus(true, field, errMsgField);
+
+    return true;
+}
+
 /** Add the field an invalid attribute
  * @param {boolean} isValid mark the field as valid
  * @param {HTMLInputElement} field field DOM element to set validity to
@@ -621,7 +640,7 @@ function setFieldValidationStatus(isValid, field, errMsgField, message = "") {
 /** Add input event listener to the passed login field to check its length validity.
  * @param {HTMLInputElement} field input field element
  * @param {HTMLElement} fieldErrMsgField input error message field element */
-function addInputListenersToLoginInputField(field, fieldErrMsgField) {
+function addInputListenerToLoginInputField(field, fieldErrMsgField) {
     field.addEventListener("input", () => {
         if (field.value.length > 0)
             validateLoginLength(field.value, field, fieldErrMsgField);
@@ -632,7 +651,7 @@ function addInputListenersToLoginInputField(field, fieldErrMsgField) {
 /** Add input event listener to the passed password field to check its length validity.
  * @param {HTMLInputElement} field input field element
  * @param {HTMLElement} fieldErrMsgField input error message field element */
-function addInputListenersToPasswordInputField(field, fieldErrMsgField) {
+function addInputListenerToPasswordInputField(field, fieldErrMsgField) {
     field.addEventListener("input", () => {
         if (field.value.length > 0)
             validatePasswordLength(field.value, field, fieldErrMsgField);
@@ -644,12 +663,25 @@ function addInputListenersToPasswordInputField(field, fieldErrMsgField) {
  * @param {HTMLInputElement} passField password input element
  * @param {HTMLInputElement} passConfirmField password confirmation input element
  * @param {HTMLElement} passConfirmFieldErrMsgField password confirmation error message field element */
-function addInputListenersToPasswordConfirmInputField(passField, passConfirmField, passConfirmFieldErrMsgField) {
+function addInputListenerToPasswordConfirmInputField(passField, passConfirmField, passConfirmFieldErrMsgField) {
     passConfirmField.addEventListener("input", () => {
         if (passConfirmField.value.length > 0)
             validatePasswordsMatching(
                 passField.value, passConfirmField.value, passConfirmField, passConfirmFieldErrMsgField
             );
         else setFieldValidationStatus(true, passConfirmField, passConfirmFieldErrMsgField);
+    });
+}
+
+/** Add input event listener to the passed input of type number to check its value validity.
+ * @param {HTMLInputElement} field input field element
+ * @param {HTMLElement} errMsgField input error message field element */
+function addInputListenersToNumberInputField(field, errMsgField) {
+    field.addEventListener("input", () => {
+        setFieldValidationStatus(true, field, errMsgField);
+
+        if (field.value.length > 0)
+            validateInputNumber(field, errMsgField);
+        else setFieldValidationStatus(true, field, errMsgField);
     });
 }

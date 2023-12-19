@@ -9,9 +9,9 @@ function setUpPageOnLoad() {
     // edit account window
     setUpEditAccountButtonClickListener();
     setUpCloseEditAccountWindowButtonClickListener();
-    addInputListenersToLoginInputField(id("edit-account-login-input"), id("edit-account-login-err-msg"));
-    addInputListenersToPasswordInputField(id("edit-account-password-input"), id("edit-account-password-err-msg"));
-    addInputListenersToPasswordConfirmInputField(
+    addInputListenerToLoginInputField(id("edit-account-login-input"), id("edit-account-login-err-msg"));
+    addInputListenerToPasswordInputField(id("edit-account-password-input"), id("edit-account-password-err-msg"));
+    addInputListenerToPasswordConfirmInputField(
         id("edit-account-new-password-input"), id("edit-account-new-password-confirmation-input"), id("edit-account-new-password-confirmation-err-msg")
     );
     setUpEditAccountSubmitButtonClickListener();
