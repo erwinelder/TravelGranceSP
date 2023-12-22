@@ -1,35 +1,45 @@
 <?php
 session_start();
+
+if (!(isset($_SESSION["isLoggedIn"])))
+    header("Location: ../index.php");
+
+$navbarClass = "logged-in";
+$username = $_SESSION["login"];
+$usernameGreetings = ", " . htmlspecialchars($_SESSION["login"]);
+
+$avatarPath = "../data/avatars/default.jpg";
+if (strlen($_SESSION["avatarFilename"]) > 0)
+    $avatarPath = "../data/avatars/" . $_SESSION["avatarFilename"];
+
 ?>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TravelGlance</title>
-    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="../styles/index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
-    <script src="scripts/main.js"></script>
-    <script src="scripts/authentication-authorisation.js"></script>
-    <script src="scripts/validation.js"></script>
-    <script src="scripts/animation.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script src="../scripts/home.js"></script>
+    <script src="../scripts/authentication-authorisation.js"></script>
+    <script src="../scripts/record-model.js"></script>
+    <script src="../scripts/validation.js"></script>
+    <script src="../scripts/animation.js"></script>
 </head>
 <body>
 
     <div class="top-bar-cont">
         <div class="top-bar glass-morphism navigation" id="top-bar">
 
-            <nav id="navbar" class="<?php
-                    if (isset($_SESSION["isLoggedIn"]) && $_SESSION["isLoggedIn"] == "true")
-                        echo "logged-in";
-                    else echo "logged-out";
-                ?>">
+            <nav id="navbar" class="<?php echo $navbarClass; ?>">
                 <input type="button" class="primary-button" id="make-record-button" value="Make record">
                 <span class="vertical-divider"></span>
-                <p class="secondary-button current">Public records</p>
-                <a class="secondary-button" href="pages/home.php">Home</a>
+                <a class="secondary-button" href="../index.php">Public records</a>
+                <p class="secondary-button current">Home</p>
                 <span class="vertical-divider"></span>
                 <input class="primary-button" type="button" id="log-in-button" value="Log in">
                 <input class="primary-button" type="button" id="log-out-button" value="Log out">
@@ -68,7 +78,7 @@ session_start();
 
             </form>
 
-            <form class="sign-up-window top-bar-window" id="sign-up-window" action="php/sign-up-process.php" enctype="multipart/form-data" method="post">
+            <form class="sign-up-window top-bar-window" id="sign-up-window" action="../php/sign-up-process.php" enctype="multipart/form-data" method="post">
 
                 <input type="button" class="secondary-button" id="sign-up-window-close-button" value="Close">
 
@@ -118,7 +128,61 @@ session_start();
 
             </form>
 
-            <form class="make-record-window top-bar-window" id="make-record-window" action="" >
+            <form class="edit-account-window top-bar-window" id="edit-account-window" action="../php/edit-account-data-process.php" enctype="multipart/form-data" method="post">
+
+                <input type="button" class="secondary-button" id="edit-account-window-close-button" value="Close">
+
+                <div class="field-cont">
+                    <div class="field-title-cont">
+                        <label class="field-title" for="edit-account-password-input">Password</label>
+                        <p class="field-title-note">*required</p>
+                    </div>
+                    <input type="password" id="edit-account-password-input" name="password" minlength="8" maxlength="40" required>
+                    <p class="field-title-err-msg" id="edit-account-password-err-msg">*At least 8 characters long</p>
+                </div>
+
+                <div class="field-cont">
+                    <div class="field-title-cont">
+                        <label class="field-title" for="edit-account-login-input">New login</label>
+                    </div>
+                    <input type="text" id="edit-account-login-input" name="login" placeholder="<?php echo htmlspecialchars($username); ?>" minlength="4" maxlength="20">
+                    <p class="field-title-err-msg" id="edit-account-login-err-msg">*Login already exists</p>
+                </div>
+
+                <div class="field-cont">
+                    <div class="field-title-cont">
+                        <label class="field-title" for="edit-account-new-password-input">New password</label>
+                    </div>
+                    <input type="password" id="edit-account-new-password-input" name="newPassword" minlength="8" maxlength="40">
+                    <p class="field-title-err-msg" id="edit-account-new-password-err-msg">*At least 8 characters long</p>
+                </div>
+
+                <div class="field-cont">
+                    <div class="field-title-cont">
+                        <label class="field-title" for="edit-account-new-password-confirmation-input">Repeat password</label>
+                    </div>
+                    <input type="password" id="edit-account-new-password-confirmation-input" minlength="8" maxlength="40">
+                    <p class="field-title-err-msg" id="edit-account-new-password-confirmation-err-msg">*Passwords do not match</p>
+                </div>
+
+                <div class="field-cont">
+                    <div class="field-title-cont">
+                        <label class="field-title" for="edit-account-avatar-input">New avatar</label>
+                    </div>
+                    <input type="file" id="edit-account-avatar-input" name="avatar" accept="image/jpeg">
+                    <p class="field-title-err-msg" id="edit-account-avatar-err-msg">*</p>
+                </div>
+
+                <div class="button-block">
+                    <hr class="big-hr">
+                    <div class="button-block-content">
+                        <input type="submit" class="primary-button" id="edit-account-submit-button" value="Save changes">
+                    </div>
+                </div>
+
+            </form>
+
+            <form class="make-record-window top-bar-window" id="make-record-window">
 
                 <input type="button" class="secondary-button" id="make-record-window-close-button" value="Close">
 
@@ -132,7 +196,8 @@ session_start();
                         <label class="field-title" for="make-record-amount">Amount</label>
                         <p class="field-title-note">*required</p>
                     </div>
-                    <input type="number" placeholder="0" id="make-record-amount" required>
+                    <input type="number" placeholder="0" step="0.01" id="make-record-amount" required>
+                    <p class="field-title-err-msg" id="make-record-amount-err-msg">*Is not a number</p>
                 </div>
 
                 <div class="field-cont">
@@ -163,6 +228,31 @@ session_start();
 
         </div>
     </div>
+
+
+    <div class="content">
+
+        <!-- greetings -->
+        <div class="personal-data widget glass-morphism" id="personal-data">
+            <h2 class="greetings-title"><span id="greetings-title">Good afternoon</span><?php echo $usernameGreetings; ?>!</h2>
+            <img src="<?php echo $avatarPath ?>" alt="user avatar" class="personal-data-avatar">
+            <input type="button" value="Edit account data" class="secondary-button" id="edit-account-button">
+            <input type="button" value="Delete account" class="secondary-button" id="delete-account-button">
+        </div>
+
+        <!-- records block -->
+        <div class="history-cont widget glass-morphism" id="history-cont">
+            <div class="history" id="history"></div>
+            <div class="history-empty-placeholder" id="history-empty-placeholder"></div>
+        </div>
+
+    </div>
+
+    <div class="floating-window-cont make-record-window-cont" id="make-record-window-cont">
+
+        <span class="close-area"></span>
+
+    </div> <!-- make-record-cont -->
 
 </body>
 </html>
