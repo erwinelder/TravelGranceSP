@@ -35,23 +35,23 @@ if ($_FILES["avatar"]["error"] == UPLOAD_ERR_NO_FILE) {
 // validate input login
 if (strlen(passedLogin) < 4 || strlen(passedLogin) > 20) {
     $_SESSION["errorMassage"] = "Login must be in range 4-20 chars";
-    header("Location: ../pages/error-page.php");
+    header("Location: /~volodyeh/pages/error-page.php");
 }
 if (currentLogin !== passedLogin && loginExistsInJson(passedLogin)) {
     $_SESSION["errorMassage"] = "Login already exists";
-    header("Location: ../pages/error-page.php");
+    header("Location: /~volodyeh/pages/error-page.php");
 }
 
 // validate password
 if (strlen(passedPassword) < 8 || strlen(passedPassword) > 40) {
     $_SESSION["errorMassage"] = "Password must be in range 8-40 chars";
-    header("Location: ../pages/error-page.php");
+    header("Location: /~volodyeh/pages/error-page.php");
 }
 
 // validate new password
 if (strlen(passedNewPassword) != 0 && (strlen(passedNewPassword) < 8 || strlen(passedNewPassword) > 40)) {
     $_SESSION["errorMassage"] = "New password must be in range 8-40 chars";
-    header("Location: ../pages/error-page.php");
+    header("Location: /~volodyeh/pages/error-page.php");
 }
 
 
@@ -61,12 +61,15 @@ $hashedPassword = password_hash(passedNewPassword, PASSWORD_DEFAULT);
 // if an avatar was uploaded, remove old avatar and move the new one to the avatars directory
 if ($newAvatarIsUploaded) {
     // remove old avatar
-    unlink($avatarsDir . $currentAvatarFullFilename);
+    if (file_exists($avatarsDir . $currentAvatarFullFilename) && $currentAvatarFullFilename != "") {
+        unlink($avatarsDir . $currentAvatarFullFilename);
+    }
     // move the new avatar to the avatars directory
     move_uploaded_file($_FILES["avatar"]["tmp_name"], $avatarsDir . $newAvatarFullFilename);
 // if no new avatar was uploaded, change current avatar filename, so it matches user new login
-} else if (file_exists($avatarsDir . $currentAvatarFullFilename))
+} else if (file_exists($avatarsDir . $currentAvatarFullFilename)) {
     rename($avatarsDir . $currentAvatarFullFilename, $avatarsDir . $newAvatarFullFilename);
+}
 
 
 // get data from the JSON file and decode it
@@ -94,4 +97,4 @@ foreach ($usersList as $user) {
 file_put_contents("../data/users.json", json_encode($usersList));
 
 // redirect back to the main page (public records page)
-header("Location: ../pages/home.php");
+header("Location: /~volodyeh/pages/home.php");

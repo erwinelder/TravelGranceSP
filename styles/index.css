@@ -25,7 +25,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-image: url("../res/images/main_background.png");
+    background-image: url("/~volodyeh/res/images/main_background.png");
     background-size: cover;
     background-position: top;
     background-repeat: repeat;
@@ -385,4 +385,11 @@ nav .vertical-divider {
     gap: 1em;
     display: flex;
     align-items: center;
+}
+
+
+@media print {
+    .top-bar-cont {
+        display: none;
+    }
 }

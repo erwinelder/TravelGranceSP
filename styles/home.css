@@ -87,3 +87,13 @@
 .record.active + .delete-record-button {
     display: block;
 }
+
+
+@media print {
+    #edit-account-button {
+        display: none;
+    }
+    #delete-account-button {
+        display: none;
+    }
+}

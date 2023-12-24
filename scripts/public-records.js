@@ -105,7 +105,7 @@ function addClickListenersToChangeRecordsPageButtons() {
  * @return {Promise<number>} - New records page number.
  */
 async function changeRecordsPage(changeToNext) {
-    return fetch("../php/change-records-page.php", {
+    return fetch("/~volodyeh/php/change-records-page.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

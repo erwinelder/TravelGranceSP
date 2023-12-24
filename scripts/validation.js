@@ -12,6 +12,9 @@ async function validateLogin(loginField, loginErrMsgField) {
     if (!validateLoginLength(loginField, loginErrMsgField))
         return false;
 
+    if (!validateLoginChars(loginField, loginErrMsgField))
+        return false;
+
     let loginExists = await checkIfLoginExistsInJson(loginField.value);
     if (loginExists)
         setFieldValidationStatus(false, loginField, loginErrMsgField, "Login already exists");
@@ -44,6 +47,35 @@ function validatePassword(
 }
 
 /**
+ * Validate a file.
+ *
+ * @param {HTMLInputElement} fileField - File input element.
+ * @param {HTMLElement} fileErrMsgField - File error message field element.
+ *
+ * @return {boolean} - TRUE if the validation passed and FALSE otherwise.
+ */
+function validateFile(
+    fileField, fileErrMsgField
+) {
+    if (fileField.value === "") {
+        return true;
+    }
+
+    let allowedFiles = ["jpg", "jpeg", "png"],
+        fileExtension = fileField.files[0].name.split('.').pop().toLowerCase();
+
+    let validationResult = allowedFiles.includes(fileExtension);
+
+    if (validationResult) {
+        setFieldValidationStatus(true, fileField, fileErrMsgField);
+    } else {
+        setFieldValidationStatus(false, fileField, fileErrMsgField, "File is not supported");
+    }
+
+    return validationResult;
+}
+
+/**
  * Check if the login has a valid length.
  *
  * @param {HTMLInputElement} loginField - The login input element.
@@ -59,6 +91,29 @@ function validateLoginLength(loginField, loginErrMsgField) {
         setFieldValidationStatus(true, loginField, loginErrMsgField);
     else
         setFieldValidationStatus(false, loginField, loginErrMsgField, "Must be in range 4-20 chars");
+
+    return validationResult;
+}
+
+/**
+ * Check if the login has a valid range of characters.
+ *
+ * @param {HTMLInputElement} loginField - The login input element.
+ * @param {HTMLInputElement} loginErrMsgField THe login error message field element.
+ *
+ * @return {boolean} - TRUE if the characters are valid and FALSE otherwise.
+ */
+function validateLoginChars(loginField, loginErrMsgField) {
+    let login = loginField.value,
+        validationResult = false,
+        allowedChars = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+
+    if (!login.match(allowedChars)) {
+        setFieldValidationStatus(true, loginField, loginErrMsgField);
+        validationResult = true;
+    } else {
+        setFieldValidationStatus(false, loginField, loginErrMsgField, "Must contain only letters and numbers");
+    }
 
     return validationResult;
 }
@@ -194,10 +249,13 @@ function setUpListenersForInputsInForm(form) {
  */
 function addInputListenerToLoginInputField(field, fieldErrMsgField) {
     field.addEventListener("input", () => {
-        if (field.value.length > 0)
-            validateLoginLength(field, fieldErrMsgField);
-        else
+        if (field.value.length > 0) {
+            if (validateLoginLength(field, fieldErrMsgField)) {
+                validateLoginChars(field, fieldErrMsgField);
+            }
+        } else {
             setFieldValidationStatus(true, field, fieldErrMsgField);
+        }
     });
 }
 

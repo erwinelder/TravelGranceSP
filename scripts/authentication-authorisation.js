@@ -50,7 +50,9 @@ function addClickListenerToSignUpSubmitButton() {
             passwordField = id("sign-up-password-input"),
             passwordErrMsgField = id("sign-up-password-err-msg"),
             passwordConfirmField = id("sign-up-password-confirmation-input"),
-            passwordConfirmErrMsgField = id("sign-up-password-confirmation-err-msg");
+            passwordConfirmErrMsgField = id("sign-up-password-confirmation-err-msg"),
+            fileField = id("sign-up-avatar-input"),
+            fileErrMsgField = id("sign-up-avatar-err-msg");
 
         let loginValidationResult = await validateLogin(loginField, loginErrMsgField);
         let passwordValidationResult =
@@ -58,8 +60,9 @@ function addClickListenerToSignUpSubmitButton() {
                 passwordField, passwordErrMsgField,
                 passwordConfirmField, passwordConfirmErrMsgField
             );
+        let fileValidationResult = validateFile(fileField, fileErrMsgField);
 
-        if (loginValidationResult && passwordValidationResult)
+        if (loginValidationResult && passwordValidationResult && fileValidationResult)
             submitEvent.target.form.submit();
     }
 }
@@ -72,7 +75,7 @@ function addClickListenerToSignUpSubmitButton() {
  * @return {Promise<boolean>} - TRUE if the login already exists in the user.json file and FALSE otherwise.
  */
 async function checkIfLoginExistsInJson(login) {
-    return fetch("../php/login-searching-process.php", {
+    return fetch("/~volodyeh/php/login-searching-process.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -132,7 +135,7 @@ function addClickListenerToLogInSubmitButton() {
             passwordErrMsgField = id("log-in-password-err-msg");
 
         let loginValidationResult =
-            validateLoginLength(loginField, loginErrMsgField);
+            validateLoginLength(loginField, loginErrMsgField) && validateLoginChars(loginField, loginErrMsgField);
         let passwordValidationResult =
             validatePasswordLength(passwordField, passwordErrMsgField);
 
@@ -193,7 +196,7 @@ async function attemptLogIn(
  * @return {Promise<UserDataCheck>} - Object
  */
 async function checkIfLogInDataExist(login, password) {
-    return fetch("../php/log-in-process.php", {
+    return fetch("/~volodyeh/php/log-in-process.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -225,7 +228,7 @@ async function checkIfLogInDataExist(login, password) {
  */
 function setUpLogOutButtonClickListener() {
     id("log-out-button").onclick = async () => {
-        await fetch("../php/log-out-process.php", {
+        await fetch("/~volodyeh/php/log-out-process.php", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -239,7 +242,7 @@ function setUpLogOutButtonClickListener() {
                 console.log("Error during logout: ", error);
             });
 
-        location.href = "../index.php";
+        location.href = "/~volodyeh/index.php";
     }
 }
 
@@ -303,7 +306,9 @@ function addClickListenerToEditAccountSubmitButton() {
             newPasswordInput = id("edit-account-new-password-input"),
             newPasswordErrMsgField = id("edit-account-new-password-err-msg"),
             newPasswordConfirmationInput = id("edit-account-new-password-confirmation-input"),
-            newPasswordConfirmationErrMsgField = id("edit-account-new-password-confirmation-err-msg");
+            newPasswordConfirmationErrMsgField = id("edit-account-new-password-confirmation-err-msg"),
+            fileField = id("edit-account-avatar-input"),
+            fileErrMsgField = id("edit-account-avatar-err-msg");
 
         let loginValidationResult = await validateLoginInEditAccount(loginInput, loginErrMsgField);
         let passwordValidationResult =
@@ -312,8 +317,12 @@ function addClickListenerToEditAccountSubmitButton() {
                 newPasswordInput, newPasswordErrMsgField,
                 newPasswordConfirmationInput, newPasswordConfirmationErrMsgField
             );
+        let fileValidationResult = validateFile(fileField, fileErrMsgField);
 
-        if (!(loginValidationResult && passwordValidationResult))
+        // console.log(loginValidationResult && passwordValidationResult && fileValidationResult);
+        // console.log(`login: ${loginInput.value}, password: ${passwordInput.value}, new password: ${newPasswordInput.value}, file: ${fileField.value}`);
+
+        if (!(loginValidationResult && passwordValidationResult && fileValidationResult))
             return false;
 
         let passwordVerifyingResult = await verifyPassword(passwordInput, passwordErrMsgField);
@@ -356,7 +365,7 @@ async function validateLoginInEditAccount(loginField, loginErrMsgField) {
  * if passed new login is available, returns TRUE, else returns FALSE.
  */
 async function checkIfLoginCanBeChanged(login) {
-    return fetch("../php/login-change-checking-process.php", {
+    return fetch("/~volodyeh/php/login-change-checking-process.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -434,7 +443,7 @@ async function verifyPassword(passwordField, passwordErrMsgField) {
  * @return {Promise<boolean>} - TRUE if the password verifying is success and FALSE otherwise.
  */
 async function verifyPasswordInJson(password) {
-    return fetch("../php/password-verifying-process.php", {
+    return fetch("/~volodyeh/php/password-verifying-process.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -458,7 +467,7 @@ async function verifyPasswordInJson(password) {
  * @return {Promise<boolean>} - TRUE if the deleting account was success and FALSE otherwise.
  */
 async function deleteAccount() {
-    return fetch("../php/deleting-account-process.php", {
+    return fetch("/~volodyeh/php/deleting-account-process.php", {
         method: "GET",
         headers: {
             "Content-Type": "application/json"

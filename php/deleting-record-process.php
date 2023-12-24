@@ -10,7 +10,7 @@ if (!is_int($passedRecordId)) {
     header("Location: /~volodyeh/pages/error-page.php");
 }
 
-$recordsList = json_decode(file_get_contents("/~volodyeh/data/records.json"));
+$recordsList = json_decode(file_get_contents("../data/records.json"));
 $result = false;
 
 for ($i = 0; $i < count($recordsList); $i++) {
@@ -23,6 +23,6 @@ for ($i = 0; $i < count($recordsList); $i++) {
     }
 }
 
-file_put_contents("/~volodyeh/data/records.json", json_encode($recordsList));
+file_put_contents("../data/records.json", json_encode($recordsList));
 
 echo json_encode($result);

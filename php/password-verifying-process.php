@@ -8,7 +8,7 @@ $passedPassword = json_decode(file_get_contents("php://input"), true);
 
 if (!is_string($passedPassword)) {
     $_SESSION["errorMassage"] = "Password is not of type string";
-    header("Location: ../pages/error-page.php");
+    header("Location: /~volodyeh/pages/error-page.php");
 }
 
 $passwordVerificationResult = verifyLoginPasswordInJson($_SESSION["login"], $passedPassword);

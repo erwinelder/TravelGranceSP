@@ -152,6 +152,6 @@ function addClickListenerToDeleteAccountButton() {
     id("delete-account-button").onclick = async () => {
         let result = await deleteAccount();
         if (result)
-            location.href = "../index.php";
+            location.href = "/~volodyeh/index.php";
     }
 }

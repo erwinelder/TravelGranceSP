@@ -2,15 +2,15 @@
 session_start();
 
 if (!isset($_SESSION["isLoggedIn"]))
-    header("Location: ../index.php");
+    header("Location: /~volodyeh/index.php");
 
 $navbarClass = "logged-in";
 $username = $_SESSION["login"];
 $usernameGreetings = ", " . htmlspecialchars($_SESSION["login"]);
 
-$avatarPath = "../data/avatars/default.jpg";
+$avatarPath = "/~volodyeh/data/avatars/default.jpg";
 if (strlen($_SESSION["avatarFilename"]) > 0)
-    $avatarPath = "../data/avatars/" . $_SESSION["avatarFilename"];
+    $avatarPath = "/~volodyeh/data/avatars/" . $_SESSION["avatarFilename"];
 
 ?>
 <!DOCTYPE html>
@@ -19,17 +19,17 @@ if (strlen($_SESSION["avatarFilename"]) > 0)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TravelGlance | Home</title>
-    <link rel="stylesheet" href="../styles/index.css">
-    <link rel="stylesheet" href="../styles/home.css">
+    <link rel="stylesheet" href="/~volodyeh/styles/index.css">
+    <link rel="stylesheet" href="/~volodyeh/styles/home.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
-    <script src="../scripts/main.js"></script>
-    <script src="../scripts/record-model.js"></script>
-    <script src="../scripts/home.js"></script>
-    <script src="../scripts/authentication-authorisation.js"></script>
-    <script src="../scripts/validation.js"></script>
-    <script src="../scripts/animation.js"></script>
+    <script src="/~volodyeh/scripts/main.js"></script>
+    <script src="/~volodyeh/scripts/record-model.js"></script>
+    <script src="/~volodyeh/scripts/home.js"></script>
+    <script src="/~volodyeh/scripts/authentication-authorisation.js"></script>
+    <script src="/~volodyeh/scripts/validation.js"></script>
+    <script src="/~volodyeh/scripts/animation.js"></script>
 </head>
 <body>
 
@@ -39,7 +39,7 @@ if (strlen($_SESSION["avatarFilename"]) > 0)
             <nav id="navbar" class="<?php echo $navbarClass; ?>">
                 <input type="button" class="primary-button" id="make-record-button" value="Make record">
                 <span class="vertical-divider"></span>
-                <a class="secondary-button" href="../index.php">Public records</a>
+                <a class="secondary-button" href="/~volodyeh/index.php">Public records</a>
                 <p class="secondary-button current">Home</p>
                 <span class="vertical-divider"></span>
                 <input class="primary-button" type="button" id="log-in-button" value="Log in">
@@ -79,7 +79,7 @@ if (strlen($_SESSION["avatarFilename"]) > 0)
 
             </form>
 
-            <form class="sign-up-window top-bar-window" id="sign-up-window" action="../php/sign-up-process.php" enctype="multipart/form-data" method="post">
+            <form class="sign-up-window top-bar-window" id="sign-up-window" action="/~volodyeh/php/sign-up-process.php" enctype="multipart/form-data" method="post">
 
                 <input type="button" class="secondary-button" id="sign-up-window-close-button" value="Close">
 
@@ -129,7 +129,7 @@ if (strlen($_SESSION["avatarFilename"]) > 0)
 
             </form>
 
-            <form class="edit-account-window top-bar-window" id="edit-account-window" action="../php/edit-account-data-process.php" enctype="multipart/form-data" method="post">
+            <form class="edit-account-window top-bar-window" id="edit-account-window" action="/~volodyeh/php/edit-account-data-process.php" enctype="multipart/form-data" method="post">
 
                 <input type="button" class="secondary-button" id="edit-account-window-close-button" value="Close">
 

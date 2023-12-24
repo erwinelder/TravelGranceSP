@@ -76,3 +76,10 @@
 .record .small-hr {
     grid-area: divider;
 }
+
+
+@media print {
+    .history-nav-buttons input {
+        display: none;
+    }
+}

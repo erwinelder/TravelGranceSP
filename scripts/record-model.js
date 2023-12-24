@@ -44,7 +44,7 @@ async function attemptToSaveRecord() {
  * @return {Promise<boolean>} - TRUE if the record was successfully saved and FALSE otherwise.
  */
 async function saveNewRecordToJson(date, amount, city) {
-    return fetch("../php/making-record-process.php", {
+    return fetch("/~volodyeh/php/making-record-process.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -73,7 +73,7 @@ async function saveNewRecordToJson(date, amount, city) {
  * @return {Promise<Record[]>}
  */
 async function getUserRecordsFromJson() {
-    return fetch("../php/get-user-records.php", {
+    return fetch("/~volodyeh/php/get-user-records.php", {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
@@ -96,7 +96,7 @@ async function getUserRecordsFromJson() {
  * @return {Promise<DetailedRecord[]>}
  */
 async function getRecordsFromJson() {
-    return fetch("../php/get-records.php", {
+    return fetch("/~volodyeh/php/get-records.php", {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
@@ -121,7 +121,7 @@ async function getRecordsFromJson() {
  * @return {Promise<boolean>} - TRUE if the deleting was successful and FALSE otherwise.
  */
 async function deleteRecordFromJson(recordId) {
-    return fetch("../php/deleting-record-process.php", {
+    return fetch("/~volodyeh/php/deleting-record-process.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
