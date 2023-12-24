@@ -1,0 +1,89 @@
+.home-content {
+    max-width: 1100px;
+    margin-top: 6.5em;
+    margin-inline: auto;
+    gap: 2em;
+
+    display: grid;
+    justify-content: center;
+    justify-items: stretch;
+    align-content: center;
+    grid-template-columns: 0 1fr 1fr 0;
+    grid-template-areas:
+		". personal-data history-widget ."
+		". . history-widget .";
+}
+
+
+.personal-data {
+    font-size: 1.05em;
+    gap: 1em;
+
+    grid-area: personal-data;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.personal-data-avatar {
+    width: 5em;
+    height: 5em;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+.history {
+    height: 70vh;
+    padding: 1em;
+    gap: 1.5em;
+
+    grid-area: history-widget;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    overflow-y: scroll;
+}
+.history::-webkit-scrollbar {
+    display: none;
+}
+
+.record-cont {
+    gap: 1em;
+    display: flex;
+    align-items: center;
+}
+.record {
+    max-width: calc(90% - 1em);
+    padding: .5em 1em;
+    gap: 7px;
+    border-radius: 26px;
+    font-size: 1.05rem;
+
+    display: grid;
+    justify-content: center;
+    column-gap: 1em;
+    grid-template-areas:
+		"date date"
+		"city amount";
+
+    background: var(--semi-transparent-bg);
+    box-shadow: 0 10px 25px -12px rgba(0, 0, 0, .2);
+    cursor: pointer;
+}
+.delete-record-button {
+    padding: .6em .9em;
+    border-radius: .8em;
+    font-size: 1.2em;
+
+    color: var(--on-primary-color);
+    background: var(--primary-color);
+}
+.record + .delete-record-button {
+    display: none;
+}
+.record.active + .delete-record-button {
+    display: block;
+}
