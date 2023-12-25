@@ -8,17 +8,8 @@ include_once "login-search.php";
 define("passedLogin", $_POST["login"]);
 define("passedPassword", $_POST["password"]);
 
-$avatarsDir = "/~volodyeh/data/avatars/";
-$avatarFileExtension = "";
+$avatarsDir = "../data/avatars/";
 $avatarFilename = "";
-$avatarIsUploaded = true;
-
-if ($_FILES["avatar"]["error"] == UPLOAD_ERR_NO_FILE) {
-    $avatarIsUploaded = false;
-} else {
-    $avatarOriginalFilename = basename($_FILES["avatar"]["name"]);
-    $avatarFileExtension = pathinfo($avatarOriginalFilename, PATHINFO_EXTENSION);
-}
 
 
 // validate login
@@ -38,24 +29,26 @@ if (strlen(passedPassword) < 8 || strlen(passedPassword) > 40) {
 }
 
 
-$hashedPassword = password_hash(passedPassword, PASSWORD_DEFAULT);
-
-if ($avatarIsUploaded) {
-    $avatarFilename = passedLogin . "." . $avatarFileExtension;
-    move_uploaded_file($_FILES["avatar"]["tmp_name"], $avatarsDir . $avatarFilename);
-}
-
-
 $usersList = json_decode(file_get_contents("../data/users.json"));
+
 $newUserId = 1;
 if (count($usersList) != 0) {
     $newUserId = $usersList[count($usersList) - 1]->id + 1;
 }
+
+if ($_FILES["avatar"]["error"] != UPLOAD_ERR_NO_FILE) {
+    $avatarFileExtension = pathinfo(basename($_FILES["avatar"]["name"]), PATHINFO_EXTENSION);
+    $avatarFilename = $newUserId . "." . $avatarFileExtension;
+    move_uploaded_file($_FILES["avatar"]["tmp_name"], $avatarsDir . $avatarFilename);
+}
+
+$hashedPassword = password_hash(passedPassword, PASSWORD_DEFAULT);
+
 $usersList[] = new User($newUserId, passedLogin, $hashedPassword, $avatarFilename);
 file_put_contents("../data/users.json", json_encode($usersList));
 
-$_SESSION["userId"] = $newUserId;
 $_SESSION["isLoggedIn"] = "true";
+$_SESSION["userId"] = $newUserId;
 $_SESSION["login"] = passedLogin;
 $_SESSION["avatarFilename"] = $avatarFilename;
 

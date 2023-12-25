@@ -5,34 +5,16 @@ include_once "login-search.php";
 
 session_start();
 
-// declare constants for input data
 define("currentLogin", $_SESSION["login"]);
 define("passedPassword", $_POST["password"]);
 define("passedLogin", strlen($_POST["login"]) != 0 ? $_POST["login"] : currentLogin);
 define("passedNewPassword", $_POST["newPassword"]);
 
-// predefine variables to proceed saving avatar image
 $avatarsDir = "../data/avatars/";
-$currentAvatarFullFilename = $_SESSION["avatarFilename"];
-$currentAvatarFileExtension = pathinfo($avatarsDir . $currentAvatarFullFilename, PATHINFO_EXTENSION);
-$newAvatarFileExtension = "";
-$newAvatarFullFilename = "";
-$newAvatarIsUploaded = true;
+$avatarFilename = "";
 
-// check if an avatar image was uploaded
-if ($_FILES["avatar"]["error"] == UPLOAD_ERR_NO_FILE) {
-    $newAvatarIsUploaded = false;
-    if (strlen($currentAvatarFullFilename) != 0)
-        $newAvatarFullFilename = passedLogin . "." . $currentAvatarFileExtension;
-} else {
-    $avatarOriginalFilename =  basename($_FILES["avatar"]["name"]);
-    $newAvatarFileExtension = pathinfo($avatarOriginalFilename, PATHINFO_EXTENSION);
-    $newAvatarFullFilename = passedLogin . "." . $newAvatarFileExtension;
-}
 
-// validate input data
-
-// validate input login
+// validate login
 if (strlen(passedLogin) < 4 || strlen(passedLogin) > 20) {
     $_SESSION["errorMassage"] = "Login must be in range 4-20 chars";
     header("Location: /~volodyeh/pages/error-page.php");
@@ -55,30 +37,19 @@ if (strlen(passedNewPassword) != 0 && (strlen(passedNewPassword) < 8 || strlen(p
 }
 
 
-// hash the password
-$hashedPassword = password_hash(passedNewPassword, PASSWORD_DEFAULT);
-
-// if an avatar was uploaded, remove old avatar and move the new one to the avatars directory
-if ($newAvatarIsUploaded) {
-    // remove old avatar
-    if (file_exists($avatarsDir . $currentAvatarFullFilename) && $currentAvatarFullFilename != "") {
-        unlink($avatarsDir . $currentAvatarFullFilename);
+if ($_FILES["avatar"]["error"] != UPLOAD_ERR_NO_FILE) {
+    // remove the old avatar
+    if (file_exists($avatarsDir . $_SESSION["avatarFilename"])) {
+        unlink($avatarsDir . $_SESSION["avatarFilename"]);
     }
-    // move the new avatar to the avatars directory
-    move_uploaded_file($_FILES["avatar"]["tmp_name"], $avatarsDir . $newAvatarFullFilename);
-// if no new avatar was uploaded, change current avatar filename, so it matches user new login
-} else if (file_exists($avatarsDir . $currentAvatarFullFilename)) {
-    rename($avatarsDir . $currentAvatarFullFilename, $avatarsDir . $newAvatarFullFilename);
+    // add the new avatar
+    $avatarFileExtension = pathinfo(basename($_FILES["avatar"]["name"]), PATHINFO_EXTENSION);
+    $avatarFilename = $_SESSION["userId"] . "." . $avatarFileExtension;
+    move_uploaded_file($_FILES["avatar"]["tmp_name"], $avatarsDir . $avatarFilename);
 }
 
+$usersList = json_decode(file_get_contents("../data/users.json"));
 
-// get data from the JSON file and decode it
-$usersJsonData = file_get_contents("../data/users.json");
-$usersList = json_decode($usersJsonData);
-
-// save new user's data to the JSON file
-
-// change user data in the list from the JSON file
 foreach ($usersList as $user) {
     if ($user->login === currentLogin) {
 
@@ -86,15 +57,15 @@ foreach ($usersList as $user) {
         $_SESSION["login"] = passedLogin;
 
         if (strlen(passedNewPassword) != 0)
-            $user->password = $hashedPassword;
+            $user->password = password_hash(passedNewPassword, PASSWORD_DEFAULT);
 
-        $user->avatarFilename = $newAvatarFullFilename;
-        $_SESSION["avatarFilename"] = $newAvatarFullFilename;
+        if (strlen($avatarFilename) != 0) {
+            $user->avatarFilename = $avatarFilename;
+            $_SESSION["avatarFilename"] = $avatarFilename;
+        }
     }
 }
 
-// write data with a new user data to the JSON file
 file_put_contents("../data/users.json", json_encode($usersList));
 
-// redirect back to the main page (public records page)
 header("Location: /~volodyeh/pages/home.php");
