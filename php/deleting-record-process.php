@@ -8,6 +8,7 @@ define("userId", intval($_SESSION["userId"]));
 if (!is_int($passedRecordId)) {
     $_SESSION["errorMassage"] = "Error: record id is not of type int";
     header("Location: /~volodyeh/pages/error-page.php");
+    exit;
 }
 
 $recordsList = json_decode(file_get_contents("../data/records.json"));

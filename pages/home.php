@@ -170,7 +170,7 @@ if (strlen($_SESSION["avatarFilename"]) > 0)
                     <div class="field-title-cont">
                         <label class="field-title" for="edit-account-avatar-input">New avatar</label>
                     </div>
-                    <input type="file" id="edit-account-avatar-input" name="avatar" accept="image/jpeg">
+                    <input type="file" id="edit-account-avatar-input" name="avatar" accept="image/jpeg, image/png">
                     <p class="field-title-err-msg" id="edit-account-avatar-err-msg">*</p>
                 </div>
 

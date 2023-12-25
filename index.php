@@ -110,7 +110,7 @@ $_SESSION["canPageNext"] = true;
                 <div class="field-title-cont">
                     <label class="field-title" for="sign-up-avatar-input">Avatar</label>
                 </div>
-                <input type="file" id="sign-up-avatar-input" name="avatar" accept="image/jpeg">
+                <input type="file" id="sign-up-avatar-input" name="avatar" accept="image/jpeg, image/png">
                 <p class="field-title-err-msg" id="sign-up-avatar-err-msg">*</p>
             </div>
 

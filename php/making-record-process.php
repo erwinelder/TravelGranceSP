@@ -19,35 +19,43 @@ $allowedCities = array(
     );
 define("userId", intval($_SESSION["userId"]));
 
+
 // validate date
 if (!is_int(passedDate)) {
     $_SESSION["errorMassage"] = "Error: date is not a timestamp by type int";
     header("Location: /~volodyeh/pages/error-page.php");
+    exit;
 }
 if (passedDate < 190001010000) {
     $_SESSION["errorMassage"] = "Error: invalid date";
     header("Location: /~volodyeh/pages/error-page.php");
+    exit;
 }
 
 // validate amount
 if (!is_float($passedAmount) && !is_int($passedAmount)) {
     $_SESSION["errorMassage"] = "Error: amount is not of type float int or int";
     header("Location: /~volodyeh/pages/error-page.php");
+    exit;
 }
 if ($passedAmount < 0) {
     $_SESSION["errorMassage"] = "Error: amount is negative";
     header("Location: /~volodyeh/pages/error-page.php");
+    exit;
 }
 
 // validate city
 if (!is_string(passedCity)) {
     $_SESSION["errorMassage"] = "Error: city is not of type string";
     header("Location: /~volodyeh/pages/error-page.php");
+    exit;
 }
 if (!in_array(passedCity, $allowedCities)) {
     $_SESSION["errorMassage"] = "Error: invalid city";
     header("Location: /~volodyeh/pages/error-page.php");
+    exit;
 }
+
 
 // if passed amount is integer, convert passed amount to float by format 0.00
 $passedAmount = number_format($passedAmount, 2, ".", "");

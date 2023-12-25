@@ -257,6 +257,7 @@ function resetEditAccountWindowInputData() {
     let loginInput = id("edit-account-login-input"),
         loginErrMsgField = id("edit-account-login-err-msg"),
         passwordInput = id("edit-account-password-input"),
+        passwordErrMsgField = id("edit-account-password-err-msg"),
         newPasswordInput = id("edit-account-new-password-input"),
         newPasswordErrMsgField = id("edit-account-new-password-err-msg"),
         newPasswordConfirmInput = id("edit-account-new-password-confirmation-input"),
@@ -274,6 +275,9 @@ function resetEditAccountWindowInputData() {
     passwordInput.value = null;
     if (passwordInput.classList.contains("validation-checking"))
         passwordInput.classList.remove("validation-checking");
+    // hide new password error message
+    if (passwordErrMsgField.classList.contains("visible"))
+        newPasswordErrMsgField.classList.remove("visible");
 
     // reset new password
     newPasswordInput.value = null;
@@ -319,9 +323,6 @@ function addClickListenerToEditAccountSubmitButton() {
             );
         let fileValidationResult = validateFile(fileField, fileErrMsgField);
 
-        // console.log(loginValidationResult && passwordValidationResult && fileValidationResult);
-        // console.log(`login: ${loginInput.value}, password: ${passwordInput.value}, new password: ${newPasswordInput.value}, file: ${fileField.value}`);
-
         if (!(loginValidationResult && passwordValidationResult && fileValidationResult))
             return false;
 
@@ -344,8 +345,14 @@ function addClickListenerToEditAccountSubmitButton() {
 async function validateLoginInEditAccount(loginField, loginErrMsgField) {
     let login = loginField.value;
 
-    if (login.length !== 0 && !validateLoginLength(loginField, loginErrMsgField))
-        return false;
+    if (login.length !== 0) {
+        if (!validateLoginLength(loginField, loginErrMsgField)) {
+            return false;
+        }
+        if (!validateLoginChars(loginField, loginErrMsgField)) {
+            return false;
+        }
+    }
 
     let loginCanBeChanged = await checkIfLoginCanBeChanged(login);
     if (loginCanBeChanged)

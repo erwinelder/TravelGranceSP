@@ -5,6 +5,7 @@ session_start();
 if (!isset($_SESSION["userId"])) {
     $_SESSION["errorMassage"] = "User id was not found in the session storage";
     header("Location: /~volodyeh/pages/error-page.php");
+    exit;
 }
 define("userId", $_SESSION["userId"]);
 

@@ -5,10 +5,12 @@ session_start();
 if (!isset($_SESSION["recordsCurrentPage"])) {
     $_SESSION["errorMassage"] = "Needed records list page is not defined";
     header("Location: /~volodyeh/pages/error-page.php");
+    exit;
 }
 if (!is_int($_SESSION["recordsCurrentPage"])) {
     $_SESSION["errorMassage"] = "Records list page variable is not a number";
     header("Location: /~volodyeh/pages/error-page.php");
+    exit;
 }
 
 include_once "get-user-login-avatar.php";

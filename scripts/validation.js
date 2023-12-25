@@ -57,20 +57,18 @@ function validatePassword(
 function validateFile(
     fileField, fileErrMsgField
 ) {
-    if (fileField.value === "") {
+    if (fileField.value === "")
         return true;
-    }
 
     let allowedFiles = ["jpg", "jpeg", "png"],
         fileExtension = fileField.files[0].name.split('.').pop().toLowerCase();
 
     let validationResult = allowedFiles.includes(fileExtension);
 
-    if (validationResult) {
+    if (validationResult)
         setFieldValidationStatus(true, fileField, fileErrMsgField);
-    } else {
-        setFieldValidationStatus(false, fileField, fileErrMsgField, "File is not supported");
-    }
+    else
+        setFieldValidationStatus(false, fileField, fileErrMsgField, "Must be .jpg, .jpeg or .png");
 
     return validationResult;
 }
@@ -105,15 +103,14 @@ function validateLoginLength(loginField, loginErrMsgField) {
  */
 function validateLoginChars(loginField, loginErrMsgField) {
     let login = loginField.value,
-        validationResult = false,
         allowedChars = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
 
-    if (!login.match(allowedChars)) {
+    let validationResult = !login.match(allowedChars);
+
+    if (validationResult)
         setFieldValidationStatus(true, loginField, loginErrMsgField);
-        validationResult = true;
-    } else {
+    else
         setFieldValidationStatus(false, loginField, loginErrMsgField, "Must contain only letters and numbers");
-    }
 
     return validationResult;
 }
