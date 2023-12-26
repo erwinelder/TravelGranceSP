@@ -13,7 +13,7 @@ if (!is_string($passedLogin)) {
 }
 
 $loginCanBeChanged = true;
-if ($_SESSION["login"] !== $passedLogin) {
+if (mb_strtolower($_SESSION["login"]) !== mb_strtolower($passedLogin)) {
     $loginCanBeChanged = !loginExistsInJson($passedLogin);
 }
 

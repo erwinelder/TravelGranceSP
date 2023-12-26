@@ -21,11 +21,11 @@ if (strlen(passedLogin) < 4 || strlen(passedLogin) > 20) {
     exit;
 }
 if (preg_match("/[^a-zA-Z0-9]+$/", passedLogin)) {
-    $_SESSION["errorMassage"] = "Login must have only letters or numbers";
+    $_SESSION["errorMassage"] = "Login must contain only letters or numbers";
     header("Location: /~volodyeh/pages/error-page.php");
     exit;
 }
-if (currentLogin !== passedLogin && loginExistsInJson(passedLogin)) {
+if (mb_strtolower(currentLogin) !== mb_strtolower(passedLogin) && loginExistsInJson(passedLogin)) {
     $_SESSION["errorMassage"] = "Login already exists";
     header("Location: /~volodyeh/pages/error-page.php");
     exit;
@@ -47,18 +47,19 @@ if (strlen(passedNewPassword) != 0 && (strlen(passedNewPassword) < 8 || strlen(p
 
 
 if ($_FILES["avatar"]["error"] != UPLOAD_ERR_NO_FILE) {
-    // remove the old avatar
-    if (file_exists($avatarsDir . $_SESSION["avatarFilename"])) {
-        unlink($avatarsDir . $_SESSION["avatarFilename"]);
-    }
     // add the new avatar
     $avatarFileExtension = pathinfo(basename($_FILES["avatar"]["name"]), PATHINFO_EXTENSION);
 
     // validate avatar file extension
-    if (!(in_array($avatarFileExtension, ["jpg", "jpeg", "png"]))) {
+    if (!(in_array(mb_strtolower($avatarFileExtension), ["jpg", "jpeg", "png"]))) {
         $_SESSION["errorMassage"] = "Avatar must be only jpeg, jpg or png";
         header("Location: /~volodyeh/pages/error-page.php");
         exit;
+    }
+
+    // remove the old avatar
+    if ($_SESSION["avatarFilename"] != "") {
+        unlink($avatarsDir . $_SESSION["avatarFilename"]);
     }
 
     $avatarFilename = $_SESSION["userId"] . "." . $avatarFileExtension;

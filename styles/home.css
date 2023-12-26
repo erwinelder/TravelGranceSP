@@ -80,6 +80,7 @@
 
     color: var(--on-primary-color);
     background: var(--primary-color);
+    cursor: pointer;
 }
 .record + .delete-record-button {
     display: none;

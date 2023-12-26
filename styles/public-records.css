@@ -19,6 +19,9 @@
 
     overflow-y: scroll;
 }
+.history::-webkit-scrollbar {
+    display: none;
+}
 .history-nav-buttons {
     gap: 1em;
     float: right;

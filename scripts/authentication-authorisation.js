@@ -334,11 +334,11 @@ function addClickListenerToEditAccountSubmitButton() {
 }
 
 /**
- * Check login validation in inputs in the sign-up window.
+ * Check login validation in the edit account window.
  * If any validation failed, it does not continue to the next validation and returns FALSE.
  *
- * @param {HTMLInputElement} loginField login input element
- * @param {HTMLElement} loginErrMsgField login error message field element
+ * @param {HTMLInputElement} loginField - Login input element.
+ * @param {HTMLElement} loginErrMsgField - Login error message field element.
  *
  * @return {Promise<boolean>} - TRUE if the validation passed and FALSE otherwise.
  */

@@ -352,6 +352,11 @@ nav .vertical-divider {
     width: 14.7em;
     font-size: 1em;
 }
+.field-cont input[type="file"]::file-selector-button {
+    border: none;
+    border-radius: .7em;
+    background: #fff;
+}
 .field-cont input:focus {
     background: var(--semi-transparent-primary-color);
     outline: none;
