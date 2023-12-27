@@ -48,7 +48,7 @@ if ($_FILES["avatar"]["error"] != UPLOAD_ERR_NO_FILE) {
     $avatarFileExtension = pathinfo(basename($_FILES["avatar"]["name"]), PATHINFO_EXTENSION);
 
     // validate avatar file extension
-    if (!(in_array($avatarFileExtension, ["jpg", "jpeg", "png"]))) {
+    if (!(in_array(mb_strtolower($avatarFileExtension), ["jpg", "jpeg", "png"]))) {
         $_SESSION["errorMassage"] = "Avatar must be only jpeg, jpg or png";
         header("Location: /~volodyeh/pages/error-page.php");
         exit;
